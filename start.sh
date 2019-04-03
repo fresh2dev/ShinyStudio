@@ -14,6 +14,7 @@ for site_config in ./shinyproxy/config/sites/*.yml; do
 	if [ ! -d "/srv/shiny-server/${DESTSITE}" ]; then
 		mkdir "/srv/shiny-server/${DESTSITE}" 
 		cp -R ./content/* "/srv/shiny-server/${DESTSITE}"
+		mv "/srv/shiny-server/${DESTSITE}/git" "/srv/shiny-server/${DESTSITE}/.git"
 	fi
 
 	docker-compose run -d --service-ports -e SITEID=$SITEID -e DESTSITE=$DESTSITE shinyproxy
