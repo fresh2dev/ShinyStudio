@@ -1,0 +1,60 @@
+version: '3.7'
+
+services:
+  shinyproxy:
+    build:
+      context: ./shinyproxy
+      dockerfile: Dockerfile
+    restart: on-failure
+    depends_on:
+      - influxdb
+    networks:
+      - shinystudio-net
+    environment:
+      - APPLICATION_LOGS_TO_STDOUT=false
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    ports:
+      - "${SITEPORT}:8080"
+
+  rshiny_rstudio:
+    build:
+      context: ./rshiny_rstudio
+      dockerfile: Dockerfile
+    restart: 'no'
+    networks:
+      - shinystudio-net
+    ports:
+      - '8787:8787'
+      - '3838:3838'
+    volumes:
+      - '/srv/shiny-server/${DESTSITE}:/home/rstudio/__ShinyStudio__'
+      - 'r_libraries:/r-libs'
+
+  influxdb:
+    build:
+      context: ./influxdb
+      dockerfile: Dockerfile
+    restart: 'no'
+    networks:
+      - shinystudio-net
+    ports:
+      - "8886:8086"
+    volumes:
+      - 'influxdb_data:/var/lib/influxdb'
+    environment:
+      INFLUXDB_DB: 'shinyproxy_usagestats'
+      INFLUXDB_ADMIN_ENABLED: 'true'
+      INFLUXDB_ADMIN_USER: 'admin'
+      INFLUXDB_ADMIN_PASSWORD: 'hLUCoz0gtymi'
+
+volumes:
+  influxdb_data:
+  r_libraries:
+
+networks:
+  shinystudio-net:
+    name: shinystudio-net
+  default:
+     external:
+      name: shinystudio-net

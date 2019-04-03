@@ -1,0 +1,60 @@
+# NO AUTH
+proxy:
+  ### PERSONALIZATION ###
+  title: ShinyStudio:${SITEID}
+  hide-navbar: false
+  logo-url: file:///opt/shinyproxy/templates/2col/assets/img/shinystudio.png
+  favicon-path: /opt/shinyproxy/templates/2col/assets/img/shinystudio.png
+  template-path: ./templates/2col # or [1-2]col
+  ### AUTHENTICATION ###
+  authentication: none
+  ### DANGER ZONE ###
+  port: 8080 # don't change!
+  landing-page: /
+  heartbeat-rate: 15000
+  heartbeat-timeout: 120000
+  usage-stats-url: http://influxdb:8086/write?db=shinyproxy_usagestats
+  usage-stats-username: 'admin'
+  usage-stats-password: 'hLUCoz0gtymi'
+  docker:
+    internal-networking: true
+  specs:
+    - id: reports
+      display-name: Apps & Reports
+      description: View Shiny applications and reports.
+      container-image: shinystudio_rshiny_rstudio
+      container-cmd: ["shiny-server"]
+      container-network: shinystudio-net
+      container-volumes:
+        - "/srv/shiny-server/${DESTSITE}/_apps:/srv/shiny-server"
+        - 'r_libraries:/r-libs'
+    - id: documents
+      display-name: Documents
+      description: View shared documentation.
+      container-image: shinystudio_rshiny_rstudio
+      container-cmd: ["shiny-server"]
+      container-network: shinystudio-net
+      container-volumes:
+        - "/srv/shiny-server/${DESTSITE}/_docs:/srv/shiny-server"
+        - 'r_libraries:/r-libs'
+    - id: content
+      display-name: Site Content
+      description: View site content.
+      container-image: shinystudio_rshiny_rstudio
+      container-cmd: ["shiny-server"]
+      container-network: shinystudio-net
+      container-volumes:
+        - "/srv/shiny-server/${DESTSITE}:/srv/shiny-server"
+        - 'r_libraries:/r-libs'
+    - id: rstudio
+      display-name: RStudio
+      description: Create interactive apps and docs RStudio.
+      container-image: shinystudio_rshiny_rstudio
+      container-cmd: ["rserver", "--server-daemonize=0", "--config-file=/etc/rstudio/rserver_custom.conf"]
+      container-network: shinystudio-net
+      container-volumes:
+        - "/srv/shiny-server/${DESTSITE}:/home/rstudio/__ShinyStudio__"
+        - 'r_libraries:/r-libs'
+        - '/srv/shiny-server/.rstudio/#{proxy.userId}/user-settings:/home/rstudio/.rstudio/monitored/user-settings'
+      port: 8787
+      access-groups: [ 'admins' ]

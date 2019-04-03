@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv bash           
+## load /etc/environment vars first:   		  
+ for line in $( cat /etc/environment ) ; do export $line ; done           
+ exec rserver --server-daemonize=0 --config-file /etc/rstudio/rserver_custom.conf

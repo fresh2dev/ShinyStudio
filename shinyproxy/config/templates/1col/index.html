@@ -1,0 +1,57 @@
+<!--
+
+    ShinyProxy
+
+    Copyright (C) 2016-2018 Open Analytics
+
+    ===========================================================================
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the Apache License as published by
+    The Apache Software Foundation, either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    Apache License for more details.
+
+    You should have received a copy of the Apache License
+    along with this program.  If not, see <http://www.apache.org/licenses/>
+
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head lang="en">
+	<title th:text="${title}"></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" media="screen" th:href="@{${bootstrapCss}}" />
+	<link rel="stylesheet" media="screen" th:href="@{/css/default.css}"/>
+	<link rel="stylesheet" media="screen" th:href="@{/assets/css/1-col-portfolio.css}"/>
+	<script th:src="@{${jqueryJs}}"></script>
+	<script th:src="@{${bootstrapJs}}"></script>
+</head>
+<body>
+	<div th:replace="../fragments/navbar :: navbar"></div>
+
+	<div class="container" id="applist">
+		<div th:each="app: ${apps}">
+			<div class="row" >
+				<div class="col-md-3">
+					<h3 th:text="${app.displayName == null} ? ${app.id} : ${app.displayName}"></h3>
+					<p th:if="${app.description != null}" th:text="${app.description}"></p>
+					<a class="btn btn-primary" th:href="@{/app/}+${app.id}">Open <span
+							class="glyphicon glyphicon-play-circle"></span></a>
+				</div>
+				<div class="col-md-5">
+					<a href="@{/app/}+${app.id}">
+					<img class="img-responsive" th:src="@{/assets/img/{name}.png(name=${app.id})}"></img>
+					</a>
+				</div>
+			</div>
+			<hr></hr>
+		</div>
+	</div>
+</body>
+</html>
