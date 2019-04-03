@@ -2,16 +2,13 @@
 title: "ShinyStudio"
 subtitle: 'A Docker stack of RStudio, Shiny Server, and ShinyProxy'
 output:
-  github_document:
-    toc: yes
-    toc_depth: 4
   html_document:
     fig_caption: no
     theme: 'spacelab'
     highlight: 'haddock'
     keep_md: yes
     toc: yes
-    toc_depth: 4
+    toc_depth: 3
     toc_float:
       collapsed: no
       smooth_scroll: yes
@@ -107,8 +104,6 @@ So, admins can place content within "\_\_ShinyStudio__", but outside of "_apps" 
 Note that the differentiation between "apps" and "docs" is purely for organization; there's no harm in, say, putting a document in the "_apps" folder or vice versa.
 
 It's as simple as that, and the process for creating Shiny apps is almost exactly the same.
-
-> Pro tip: when editing content
 
 ### Backup / Export Content
 

@@ -201,8 +201,6 @@ organization; there’s no harm in, say, putting a document in the
 It’s as simple as that, and the process for creating Shiny apps is
 almost exactly the same.
 
-> Pro tip: when editing content
-
 ### Backup / Export Content
 
 To persist content as Docker containers are created and destroyed, all
