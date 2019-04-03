@@ -2,6 +2,7 @@ FROM rocker/verse:latest
 
 ENV DISABLE_AUTH true
 ENV USER rstudio
+ENV USERID ${UID}
 
 ENV R_LIBS_USER /r-libs
 ENV APPLICATION_LOGS_TO_STDOUT false
