@@ -48,7 +48,7 @@ read on.
     think Docker, think *configurable, scalable, containerized
     services*.
 
-![](https://github.com/dm3ll3n/ShinyStudio/blob/master/content/_docs/ShinyStudio/img/shinyrstudio.png?raw=true)
+![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/shinyrstudio.png?raw=true)
 
 > ShinyStudio is not a product; it is a project / ecosystem wholly
 > composed of the above products. ShinyStudio is not affiliated or
@@ -104,11 +104,14 @@ After installing Docker and Docker Compose, setup your ShinyStudio site
 with:
 
 ``` text
-# clone this repository
+# clone this repository.
 git clone https://github.com/dm3ll3n/ShinyStudio
 
-# setup site(s) with default configuration
-./ShinyStudio/setup.sh
+# enter it.
+cd ShinyStudio
+
+# setup site(s) with default configuration.
+./control.sh setup
 ```
 
 This operation can take a few minutes, as it is downloading all the
@@ -123,7 +126,7 @@ Once complete, open a web browser and navigate to
 `http://localhost:8080`. When prompted, sign in with the username
 `admin` and the password `admin`.
 
-![](https://github.com/dm3ll3n/ShinyStudio/blob/master/content/_docs/ShinyStudio/img/1554226694.png?raw=true)
+![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554226694.png?raw=true)
 
 You are now in the ShinyStudio ecosystem, ready to consume content with
 Shiny Server or produce content with RStudio Server.
@@ -143,7 +146,7 @@ with the `admin` account, you will see four tiles:
 4.  RStudio: (admin only) opens an instance of RStudio Server for
     creating site content.
 
-![](https://github.com/dm3ll3n/ShinyStudio/blob/master/content/_docs/ShinyStudio/img/1554226778.png?raw=true)
+![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554226778.png?raw=true)
 
 Open RStudio to begin creating your own content. In the file explorer
 pane of RStudio (bottom-right), you will see a folder named
@@ -154,7 +157,7 @@ is spun up in its own Docker container that is destroyed after each use
 (more on this later). Only files created/modified within the
 "\_\_ShinyStudio**" folder will persist between sessions.
 
-![](https://github.com/dm3ll3n/ShinyStudio/blob/master/content/_docs/ShinyStudio/img/1554226835.png?raw=true)
+![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554226835.png?raw=true)
 
 > *Everything* outside of the "\_\_ShinyStudio\_\_" directory will be
 > purged after exiting RStudio. Only files created/modified within the
@@ -179,7 +182,7 @@ Now, with the file saved under
 home screen, select the “Documents” pane, and you will see your rendered
 document.
 
-![](https://github.com/dm3ll3n/ShinyStudio/blob/master/content/_docs/ShinyStudio/img/1554232012.png?raw=true)
+![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554232012.png?raw=true)
 
 All content within the "\_\_ShinyStudio\_\_" folder is viewable from the
 “Site Content” pane. Only content in the "\_apps" and "\_docs" folder is
@@ -189,7 +192,7 @@ So, admins can place content within "\_\_ShinyStudio\_\_“, but outside
 of”\_apps" or "\_docs" in order to develop and test their work before
 giving access to a standard user.
 
-![](https://github.com/dm3ll3n/ShinyStudio/blob/master/content/_docs/ShinyStudio/img/1554226895.png?raw=true)
+![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554226895.png?raw=true)
 
 Note that the differentiation between “apps” and “docs” is purely for
 organization; there’s no harm in, say, putting a document in the
@@ -203,16 +206,16 @@ almost exactly the same.
 ### Backup / Export Content
 
 To persist content as Docker containers are created and destroyed, all
-site content is stored on the host server at `/srv/shiny-server/{PORT}`.
-Thus, you can use whatever method you want to backup and restore content
-in this folder.
+site content is stored on the host server at `/srv/shiny-server/{PORT}`
+(by default). Thus, you can use whatever method you want to backup and
+restore content in this folder.
 
 In addition, site admins can use RStudio to download a zip of all the
 content in the "\_\_ShinyStudio\_\_" directory. Also, it’s a good idea
 to initialize a git repo in this here; RStudio has a useful git
 interface for managing versions of apps and documents.
 
-![](https://github.com/dm3ll3n/ShinyStudio/blob/master/content/_docs/ShinyStudio/img/1554226952.png?raw=true)
+![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554226952.png?raw=true)
 
 You may notice the hidden directory `/srv/shiny-server/.rstudio`. This
 contains user preferences within RStudio. While session states are not
@@ -233,7 +236,7 @@ To do nothing other than change the default passwords, locate the config
 file for the site hosted on port 8080; you can find it here:
 
 ``` text
-./ShinyStudio/shinyproxy/config/sites/8080.yml
+./shinyproxy/config/sites/8080.yml
 ```
 
 > In this folder, you will see example configurations that have been
@@ -262,7 +265,7 @@ users:
 Once you’ve made the desired edits, setup the site again with:
 
 ``` bash
-./ShinyStudio/setup.sh
+./control.sh setup
 ```
 
 ### Default Roles
@@ -287,10 +290,10 @@ The default setup spawns one instance of ShinyProxy at the default port
 8080.
 
 ``` text
-./ShinyStudio/shinyproxy/config/sites/8080.yml
+./shinyproxy/config/sites/8080.yml
 ```
 
-![](https://github.com/dm3ll3n/ShinyStudio/blob/master/content/_docs/ShinyStudio/img/1554255282.png?raw=true)
+![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554255282.png?raw=true)
 
 #### Add Sites
 
@@ -298,12 +301,12 @@ The setup below will spawn three unique, independent instances of
 ShinyProxy, hosted on ports 8080, 8081, and 8082.
 
 ``` text
-./ShinyStudio/shinyproxy/config/sites/8080.yml
-./ShinyStudio/shinyproxy/config/sites/8081.yml
-./ShinyStudio/shinyproxy/config/sites/8082.yml
+./shinyproxy/config/sites/8080.yml
+./shinyproxy/config/sites/8081.yml
+./shinyproxy/config/sites/8082.yml
 ```
 
-![](https://github.com/dm3ll3n/ShinyStudio/blob/master/content/_docs/ShinyStudio/img/1554255306.png?raw=true)
+![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554255306.png?raw=true)
 
 > Note: ShinyProxy logs usage to InfluxDB, which is typically served on
 > port 8086. To avoid conflicts with multiple ShinyProxy sites, InfluxDB
@@ -315,9 +318,9 @@ To disable a site, just the extension of its config file. In the setup
 below, only sites 8080 and 8082 will be hosted.
 
 ``` text
-./ShinyStudio/shinyproxy/config/sites/8080.yml
-./ShinyStudio/shinyproxy/config/sites/8081.yml_
-./ShinyStudio/shinyproxy/config/sites/8082.yml
+./shinyproxy/config/sites/8080.yml
+./shinyproxy/config/sites/8081.yml_
+./shinyproxy/config/sites/8082.yml
 ```
 
 #### Shared Content
@@ -333,12 +336,12 @@ contains the same content (from 8080), and any changes to content in one
 site will be reflected in another.
 
 ``` text
-./ShinyStudio/shinyproxy/config/sites/8080.yml
-./ShinyStudio/shinyproxy/config/sites/8081_8080.yml
-./ShinyStudio/shinyproxy/config/sites/8082_8080.yml
+./shinyproxy/config/sites/8080.yml
+./shinyproxy/config/sites/8081_8080.yml
+./shinyproxy/config/sites/8082_8080.yml
 ```
 
-![](https://github.com/dm3ll3n/ShinyStudio/blob/master/content/_docs/ShinyStudio/img/1554255374.png?raw=true)
+![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554255374.png?raw=true)
 
 ## Updating ShinyStudio
 
@@ -347,7 +350,7 @@ ShinyStudio ecosystem with the command below. The same command will also
 pull the latest version of RStudio Server and Shiny Server.
 
 ``` bash
-./ShinyProxy/setup.sh
+./control.sh setup
 ```
 
 ## Setup Conclusion
@@ -405,11 +408,11 @@ simple trick is the magic to the ShinyStudio approach.
 
 ### ShinyProxy: documented approach
 
-![](https://github.com/dm3ll3n/ShinyStudio/blob/master/content/_docs/ShinyStudio/img/1554234336.png?raw=true)
+![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554234336.png?raw=true)
 
 ### ShinyProxy: the ShinyStudio approach
 
-![](https://github.com/dm3ll3n/ShinyStudio/blob/master/content/_docs/ShinyStudio/img/1554234393.png?raw=true)
+![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554234393.png?raw=true)
 
 ### Comparison
 
