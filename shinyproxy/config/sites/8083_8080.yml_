@@ -28,45 +28,4 @@ proxy:
   docker:
     internal-networking: true
   specs:
-    - id: reports
-      display-name: Apps & Reports
-      description: View Shiny applications and reports.
-      container-image: shinystudio_rshiny_rstudio
-      container-cmd: ["shiny-server"]
-      container-network: shinystudio-net
-      container-volumes:
-        - "/srv/shiny-server/${DESTSITE}/_apps:/srv/shiny-server"
-        - 'r_libraries:/r-libs'
-      access-groups: [ 'superadmins', 'admins', 'readers' ]
-    - id: documents
-      display-name: Documents
-      description: View shared documentation.
-      container-image: shinystudio_rshiny_rstudio
-      container-cmd: ["shiny-server"]
-      container-network: shinystudio-net
-      container-volumes:
-        - "/srv/shiny-server/${DESTSITE}/_docs:/srv/shiny-server"
-        - 'r_libraries:/r-libs'
-      access-groups: [ 'superadmins', 'admins', 'readers' ]
-    - id: content
-      display-name: Site Content
-      description: View site content.
-      container-image: shinystudio_rshiny_rstudio
-      container-cmd: ["shiny-server"]
-      container-network: shinystudio-net
-      container-volumes:
-        - "/srv/shiny-server/${DESTSITE}:/srv/shiny-server"
-        - 'r_libraries:/r-libs'
-      access-groups: [ 'admins' ]
-    - id: rstudio
-      display-name: RStudio
-      description: Create interactive apps and docs RStudio.
-      container-image: shinystudio_rshiny_rstudio
-      container-cmd: ["rserver", "--server-daemonize=0", "--config-file=/etc/rstudio/rserver_custom.conf"]
-      container-network: shinystudio-net
-      container-volumes:
-        - "/srv/shiny-server/${DESTSITE}:/home/rstudio/__ShinyStudio__"
-        - 'r_libraries:/r-libs'
-        - '/srv/shiny-server/.rstudio/#{proxy.userId}/user-settings:/home/rstudio/.rstudio/monitored/user-settings'
-      port: 8787
-      access-groups: [ 'admins' ]
+    ...

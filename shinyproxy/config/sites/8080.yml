@@ -69,7 +69,7 @@ proxy:
       container-image: shinystudio_rshiny_rstudio
       container-network: shinystudio-net
       container-volumes:
-        - "/srv/shiny-server:/srv/shiny-server:z"
+        - "${MOUNTPOINT}:/srv/shiny-server:z"
         - 'r_libraries:/r-libs'
       access-groups: [ 'superadmins' ]
       container-env:
@@ -91,12 +91,12 @@ proxy:
       access-groups: [ 'admins' ]
     - id: rstudioadmin
       display-name: RStudio
-      description: Create interactive apps and docs RStudio.
+      description: Create interactive apps and docs RStudio (all content).
       container-image: shinystudio_rshiny_rstudio
       container-cmd: ["/start.sh", "rstudio"]
       container-network: shinystudio-net
       container-volumes:
-        - "${MOUNTPOINT}/${DESTSITE}:/home/#{proxy.userId}/__ShinyStudio__:z"
+        - "${MOUNTPOINT}:/home/#{proxy.userId}/__ShinyStudio__:z"
         - '${MOUNTPOINT}/.rstudio/#{proxy.userId}/user-settings:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z'
         - 'r_libraries:/r-libs'
       container-env:
