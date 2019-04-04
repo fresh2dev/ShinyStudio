@@ -48,7 +48,7 @@ read on.
     think Docker, think *configurable, scalable, containerized
     services*.
 
-![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/shinyrstudio.png?raw=true)
+![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/controls/content/_docs/ShinyStudio/img/shinyrstudio.png?raw=true)
 
 > ShinyStudio is not a product; it is a project / ecosystem wholly
 > composed of the above products. ShinyStudio is not affiliated or
@@ -126,7 +126,7 @@ Once complete, open a web browser and navigate to
 `http://localhost:8080`. When prompted, sign in with the username
 `admin` and the password `admin`.
 
-![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554226694.png?raw=true)
+![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/controls/content/_docs/ShinyStudio/img/1554226694.png?raw=true)
 
 You are now in the ShinyStudio ecosystem, ready to consume content with
 Shiny Server or produce content with RStudio Server.
@@ -146,7 +146,7 @@ with the `admin` account, you will see four tiles:
 4.  RStudio: (admin only) opens an instance of RStudio Server for
     creating site content.
 
-![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554226778.png?raw=true)
+![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/controls/content/_docs/ShinyStudio/img/1554226778.png?raw=true)
 
 Open RStudio to begin creating your own content. In the file explorer
 pane of RStudio (bottom-right), you will see a folder named
@@ -157,7 +157,7 @@ is spun up in its own Docker container that is destroyed after each use
 (more on this later). Only files created/modified within the
 "\_\_ShinyStudio**" folder will persist between sessions.
 
-![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554226835.png?raw=true)
+![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/controls/content/_docs/ShinyStudio/img/1554226835.png?raw=true)
 
 > *Everything* outside of the "\_\_ShinyStudio\_\_" directory will be
 > purged after exiting RStudio. Only files created/modified within the
@@ -182,7 +182,7 @@ Now, with the file saved under
 home screen, select the “Documents” pane, and you will see your rendered
 document.
 
-![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554232012.png?raw=true)
+![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/controls/content/_docs/ShinyStudio/img/1554232012.png?raw=true)
 
 All content within the "\_\_ShinyStudio\_\_" folder is viewable from the
 “Site Content” pane. Only content in the "\_apps" and "\_docs" folder is
@@ -192,7 +192,7 @@ So, admins can place content within "\_\_ShinyStudio\_\_“, but outside
 of”\_apps" or "\_docs" in order to develop and test their work before
 giving access to a standard user.
 
-![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554226895.png?raw=true)
+![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/controls/content/_docs/ShinyStudio/img/1554226895.png?raw=true)
 
 Note that the differentiation between “apps” and “docs” is purely for
 organization; there’s no harm in, say, putting a document in the
@@ -213,7 +213,7 @@ content in the "\_\_ShinyStudio\_\_" directory. Also, it’s a good idea
 to initialize a git repo in this here; RStudio has a useful git
 interface for managing versions of apps and documents.
 
-![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554226952.png?raw=true)
+![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/controls/content/_docs/ShinyStudio/img/1554226952.png?raw=true)
 
 You may notice the hidden directory `/srv/shiny-server/.rstudio`. This
 contains user preferences within RStudio. While session states are not
@@ -291,7 +291,7 @@ The default setup spawns one instance of ShinyProxy at the default port
 ./shinyproxy/config/sites/8080.yml
 ```
 
-![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554255282.png?raw=true)
+![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/controls/content/_docs/ShinyStudio/img/1554255282.png?raw=true)
 
 #### Add Sites
 
@@ -304,7 +304,7 @@ ShinyProxy, hosted on ports 8080, 8081, and 8082.
 ./shinyproxy/config/sites/8082.yml
 ```
 
-![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554255306.png?raw=true)
+![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/controls/content/_docs/ShinyStudio/img/1554255306.png?raw=true)
 
 > Note: ShinyProxy logs usage to InfluxDB, which is typically served on
 > port 8086. To avoid conflicts with multiple ShinyProxy sites, InfluxDB
@@ -339,7 +339,7 @@ site will be reflected in another.
 ./shinyproxy/config/sites/8082_8080.yml
 ```
 
-![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554255374.png?raw=true)
+![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/controls/content/_docs/ShinyStudio/img/1554255374.png?raw=true)
 
 ## Updating ShinyStudio
 
@@ -406,11 +406,11 @@ simple trick is the magic to the ShinyStudio approach.
 
 ### ShinyProxy: documented approach
 
-![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554234336.png?raw=true)
+![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/controls/content/_docs/ShinyStudio/img/1554234336.png?raw=true)
 
 ### ShinyProxy: the ShinyStudio approach
 
-![](https://github.com/dm3ll3n/ShinyStudio/tree/master/controls/content/_docs/ShinyStudio/img/1554234393.png?raw=true)
+![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/controls/content/_docs/ShinyStudio/img/1554234393.png?raw=true)
 
 ### Comparison
 
