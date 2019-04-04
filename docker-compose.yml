@@ -12,6 +12,8 @@ services:
       - shinystudio-net
     environment:
       - APPLICATION_LOGS_TO_STDOUT=false
+      - USERID=${USERID}
+      - USER=${USER}
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
     ports:
@@ -28,8 +30,11 @@ services:
       - '8787:8787'
       - '3838:3838'
     volumes:
-      - '/srv/shiny-server/${DESTSITE}:/home/rstudio/__ShinyStudio__'
+      - '${MOUNTPOINT}/${DESTSITE}:/home/${USER}/__ShinyStudio__'
       - 'r_libraries:/r-libs'
+    environment:
+      - USER=${USER}
+      - USERID=${USERID}
 
   influxdb:
     build:
