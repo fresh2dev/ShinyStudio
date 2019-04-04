@@ -6,5 +6,5 @@ then
 	source ./stop.sh
 	echo "*** Removing"
 	docker-compose down -v
-	rm -rf "${MOUNTPOINT}/*"
+	sudo rm -rf "${MOUNTPOINT}"
 fi

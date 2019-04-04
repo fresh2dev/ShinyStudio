@@ -2,10 +2,6 @@
 title: "ShinyStudio"
 subtitle: 'A Docker stack of RStudio, Shiny Server, and ShinyProxy'
 output:
-  github_document:
-    toc: yes
-    toc_depth: 3
-    html_preview: false
   html_document:
     fig_caption: no
     theme: 'spacelab'
