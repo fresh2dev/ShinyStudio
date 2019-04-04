@@ -1,0 +1,72 @@
+---
+title: "ShinyStudio"
+subtitle: 'A Docker stack of RStudio, Shiny Server, and ShinyProxy'
+output:
+  html_document:
+    fig_caption: no
+    theme: 'spacelab'
+    highlight: 'haddock'
+    keep_md: yes
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+---
+
+## What is ShinyStudio?
+
+The ShinyStudio project is an orchestration of Docker services that allows for easy, free, and secure development and hosting of rich, interactive content with RStudio and Shiny Server, secured with ShinyProxy.
+
+The ShinyStudio ecosystem primarily consists of the products described below. If you are unfamiliar with some or all of them, keep calm and read on.
+
+- [RStudio Server](https://www.rstudio.com/): RStudio Server is a hosted instance of the RStudio, the development environment for authoring applications and documents in R. When you think RStudio, think *R development*.
+- [Shiny Server](https://shiny.rstudio.com/): Shiny is a web framework and Shiny Server is the web server component to serve and display created content. When you think Shiny, think *interactive presentation* of content.
+- [ShinyProxy](https://www.shinyproxy.io/): ShinyProxy is an open-source tool used to provide a secure entrypoint into the ShinyStudio ecosystem and is the driver behind on-demand invocation of Docker containers containing instances of RStudio or Shiny Server. When you think ShinyProxy, think *security and Docker container management*.
+- [Docker](https://www.docker.com/resources/what-container): Docker allows creating and deploying "containerized" instances of a service. In the ShinyStudio ecosystem, RStudio Server, Shiny Server, and ShinyProxy are all services delivered in a container. When you think Docker, think *configurable, scalable, containerized services*.
+
+![](img/shinyrstudio.png)
+
+> ShinyStudio is not a product; it is a project / ecosystem wholly composed of the above products. ShinyStudio is not affiliated or supported by RStudio or OpenAnalytics. Anyone benefitting from this project should direct their appreciation to the developers of these products, RStudio, OpenAnalytics, and Docker.
+
+## Basic Use
+
+By default, ShinyStudio defines three levels of access:
+
+- readers: can only view content from "Apps & Reports" or "Documents".
+- admins: can view all site content and develop content with RStudio.
+- superadmins: can view and develop site content across multiple sites.
+
+Upon logging in, you will see all or some of the tiles below:
+
+1. Apps & Reports: open an instance of Shiny Server to view *applications* hosted on this site.
+2. Documents: open an instance of Shiny Server to view *documents* hosted on this site.
+3. All Content: (admin only) opens an instance of Shiny Server directed to the root directory of this site.
+4. RStudio: (admin only) opens an instance of RStudio Server for creating site content.
+
+![](img/1554226778.png)
+
+Open RStudio to begin creating your own content. In the file explorer pane of RStudio (bottom-right), you will see a folder named "\_\_ShinyStudio__"; that folder contains all the content for the site. *Everything* outside of the "\_\_ShinyStudio__" directory will be purged after exiting RStudio. That is because each instance of RStudio is spun up in its own Docker container that is destroyed after each use (more on this later). Only files created/modified within the "\_\_ShinyStudio__" folder will persist between sessions.
+
+![](img/1554226835.png)
+
+> *Everything* outside of the "\_\_ShinyStudio__" directory will be purged after exiting RStudio.
+Only files created/modified within the "\_\_ShinyStudio__" folder will persist between sessions.
+
+### Create some content
+
+There is great documentation for getting started with [Shiny](https://shiny.rstudio.com/tutorial/) and [RMarkdown](https://rmarkdown.rstudio.com/articles_intro.html). For now, just create a new RMarkdown document by clicking `File > New File > R Markdown`, or by opening one of the templates in the `templates` folder. Edit the file, then `File > Save As...`, and save it to `__ShinyStudio__/_docs/My Document/document.Rmd`.
+
+> To properly serve the content, it is important that you place your document(s) in a folder. The folder name is what is displayed as the content title in Shiny Server.
+
+Now, with the file saved under `__ShinyStudio__/_docs/{TITLE}/{FILE}.Rmd`, browse to the ShinyStudio home screen, select the "Documents" pane, and you will see your rendered document.
+
+![](img/1554232012.png)
+
+All content within the "\_\_ShinyStudio__" folder is viewable from the "Site Content" pane. Only content in the "_apps" and "_docs" folder is viewable by a standard users.
+
+So, admins can place content within "\_\_ShinyStudio__", but outside of "_apps" or "_docs" in order to develop and test their work before giving access to a standard user.
+
+Note that the differentiation between "apps" and "docs" is purely for organization; there's no harm in, say, putting a document in the "_apps" folder or vice versa.
+
+It's as simple as that, and the process for creating Shiny apps is almost exactly the same.
