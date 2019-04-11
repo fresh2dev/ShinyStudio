@@ -25,8 +25,10 @@ else
 	sudo rm -rf /etc/services.d/shiny-server
 
 	# if none exists, init git repo.
-	if [ ! -d "/home/${USER}/__ShinyStudio__/.git" ]; then
-		git init "/home/${USER}/__ShinyStudio__"
+	site_path="/home/${USER}/__ShinyStudio__"
+	if [ ! -d "${site_path}/.git" ]; then
+		git init "${site_path}"
+		chown -R $USER "${site_path}"
 	fi
 fi
 

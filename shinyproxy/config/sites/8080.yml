@@ -40,6 +40,7 @@ proxy:
         - 'r_libraries:/r-libs'
       access-groups: [ 'superadmins', 'admins', 'readers' ]
       container-env:
+        USER: "#{proxy.userId}"
         USERID: ${USERID}
     - id: documents
       display-name: Documents
@@ -51,6 +52,7 @@ proxy:
         - 'r_libraries:/r-libs'
       access-groups: [ 'superadmins', 'admins', 'readers' ]
       container-env:
+        USER: "#{proxy.userId}"
         USERID: ${USERID}
     - id: content
       display-name: Site Content
@@ -62,6 +64,7 @@ proxy:
         - 'r_libraries:/r-libs'
       access-groups: [ 'admins' ]
       container-env:
+        USER: "#{proxy.userId}"
         USERID: ${USERID}
     - id: contentadmin
       display-name: All Content
@@ -73,6 +76,7 @@ proxy:
         - 'r_libraries:/r-libs'
       access-groups: [ 'superadmins' ]
       container-env:
+        USER: "#{proxy.userId}"
         USERID: ${USERID}
     - id: rstudio
       display-name: RStudio
