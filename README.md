@@ -10,11 +10,13 @@ ShinyStudio
 * [Basic Configuration](#basic-configuration)
   * [Default Roles](#default-roles)
   * [Multiple Sites](#multiple-sites)
+* [Customized Setup](#customized-setup)
+  * [Persistent Drivers](#persistent-drivers)
 * [Updating ShinyStudio](#updating-shinystudio)
 * [Setup Conclusion](#setup-conclusion)
 * [Appendix](#appendix)
   * [Backstory](#backstory)
-  * [Future Plans](#future-plans)
+  * [Contributing](#contributing)
 
 ## What is ShinyStudio?
 
@@ -341,6 +343,37 @@ site will be reflected in another.
 
 ![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/controls/content/_docs/ShinyStudio/img/1554255374.png?raw=true)
 
+## Customized Setup
+
+The files below are worth examining if you want to customize the
+    stack.
+
+    ./ShinyStudio/control.sh                       <-- entrypoint for site setup and control. 
+    ./ShinyStudio/controls                         <-- contains scripts for setup, restart, stop, etc.
+    ./ShinyStudio/controls/content                 <-- contains initial content for a new site.
+    ./ShinyStudio/docker-compose.yml               <-- defines how to run and build the various docker images.
+    ./ShinyStudio/rshiny_rstudio/Dockerfile        <-- defines how to build / what to include in shiny/rstudio image
+    ./ShinyStudio/rshiny_rstudio/config/odbc       <-- contains odbc config files to build into the image.
+    ./ShinyStudio/rshiny_rstudio/config/start.sh   <-- performs actions before each launch, then starts shiny/rstudio.
+    ./ShinyStudio/shinyproxy/Dockerfile            <-- defines how to build shinyproxy image.
+    ./ShinyStudio/shinyproxy/config/sites          <-- contains site definitions.
+    
+    ./ShinyStudio/shinyproxy/config/templates/1col/index.html <-- 1 column layout HTML template.
+    ./ShinyStudio/shinyproxy/config/templates/2col/index.html <-- 2 column layout HTML template.
+
+### Persistent Drivers
+
+While R packages persist between sessions, installed libraries and
+drivers do not. To have persistent drivers, they must be built into the
+Docker image that contains shiny/rstudio. The Dockerfile that defines
+what goes into the image is
+    here:
+
+    ./ShinyStudio/rshiny_rstudio/Dockerfile    <-- defines how to build / what to include in shiny/rstudio image
+
+In this file is an example that installs the Cloudera Impala ODBC
+drivers.
+
 ## Updating ShinyStudio
 
 After editing site configurations, you will have to rebuild your
@@ -396,7 +429,7 @@ low learning curve and facilitated rapid development of content.
 On the search for alternative approaches, I found [this article from
 Appsilon.com](https://appsilon.com/alternatives-to-scaling-shiny) which
 featured some [useful and though-provoking
-diagrams](https://appsilon.com/assets/uploads/2018/12/Scaling-Shiny-1.png?raw=true)
+diagrams](https://appsilon.com/assets/uploads/2018/12/Scaling-Shiny-1.png)
 on the matter.
 
 It was while reviewing those diagrams that I came to the conclusion that
@@ -478,18 +511,18 @@ for rapid development.
 In the ShinyStudio ecosystem, spawned instances of Shiny Server have
 immediate access to the latest apps and docs in the site’s directory.
 
-### Future Plans
+### Contributing
 
-  - \[ \] Enhance thumbnail quality, enhance ShinyProxy index page.
-  - \[ \] Enhance `setup.sh` and other scripts to eliminate the need to
-    restart when adding a new site.
-  - \[ \] Load common database drivers in RStudio image.
-  - \[ \] Test and document setup on Docker for Windows.
-  - \[ \] Cross-site content access for non-admin users.
-  - \[ \] Allow Shiny bookmark functionality.
-  - \[ \] Allow for customizing navbar colors for each site.
+Pull requests are welcome and appreciated, particularly with:
+
+  - \[ \] Enhance the setup experience (e.g., parameterizing control.sh)
+  - \[ \] Load common database drivers in RStudio/Shiny Docker image.
+  - \[ \] Better panel icons, enhance ShinyProxy index page, or other
+    HTML/CSS enhancements; Allow for customizing navbar colors for each
+    site.
+  - \[ \] Cross-site content access for non-admin users, probably with a
+    Python script pre-launch.
+  - \[ \] Enable Shiny bookmark functionality.
   - \[ \] Shiny app to serve as searchable index page for each section.
   - \[ \] Shiny app for viewing ShinyProxy events from InfluxDB.
   - \[ \] Automated SSL setup
-
-Pull requests are welcome and appreciated\!
