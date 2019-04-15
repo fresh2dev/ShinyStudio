@@ -1,4 +1,5 @@
+#!/usr/bin/env bash
 
-source ./stop.sh
+source ./controls/stop.sh
 
-source ./start.sh
+source ./controls/start.sh

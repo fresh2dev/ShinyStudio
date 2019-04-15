@@ -1,4 +1,6 @@
-for site_config in ../shinyproxy/config/sites/*.yml; do
+#!/usr/bin/env bash
+
+for site_config in ./shinyproxy/config/sites/*.yml; do
 	[ -e "$site_config" ] || continue
 
 	SITEID=$(basename "$site_config" .yml)

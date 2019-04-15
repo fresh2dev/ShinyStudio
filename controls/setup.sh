@@ -1,4 +1,6 @@
-source ./stop.sh
+#!/usr/bin/env bash
+
+source ./controls/stop.sh
 
 echo "*** Building"
 
@@ -10,4 +12,4 @@ fi
 
 sudo chown -R $USER "${MOUNTPOINT}"
 
-source ./start.sh
+source ./controls/start.sh

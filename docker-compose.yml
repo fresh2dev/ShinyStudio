@@ -5,7 +5,7 @@ services:
     build:
       context: ./shinyproxy
       dockerfile: Dockerfile
-    restart: on-failure
+    restart: 'always'
     depends_on:
       - influxdb
     networks:
@@ -18,6 +18,23 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
     ports:
       - "${SITEPORT}:8080"
+
+  influxdb:
+    build:
+      context: ./influxdb
+      dockerfile: Dockerfile
+    restart: 'always'
+    networks:
+      - shinystudio-net
+    ports:
+      - "8886:8086"
+    volumes:
+      - 'influxdb_data:/var/lib/influxdb'
+    environment:
+      INFLUXDB_DB: 'shinyproxy_usagestats'
+      INFLUXDB_ADMIN_ENABLED: 'true'
+      INFLUXDB_ADMIN_USER: 'admin'
+      INFLUXDB_ADMIN_PASSWORD: 'hLUCoz0gtymi'
 
   rshiny_rstudio:
     build:
@@ -35,23 +52,6 @@ services:
     environment:
       - USER=${USER}
       - USERID=${USERID}
-
-  influxdb:
-    build:
-      context: ./influxdb
-      dockerfile: Dockerfile
-    restart: 'no'
-    networks:
-      - shinystudio-net
-    ports:
-      - "8886:8086"
-    volumes:
-      - 'influxdb_data:/var/lib/influxdb'
-    environment:
-      INFLUXDB_DB: 'shinyproxy_usagestats'
-      INFLUXDB_ADMIN_ENABLED: 'true'
-      INFLUXDB_ADMIN_USER: 'admin'
-      INFLUXDB_ADMIN_PASSWORD: 'hLUCoz0gtymi'
 
 volumes:
   influxdb_data:
