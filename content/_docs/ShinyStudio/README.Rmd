@@ -8,7 +8,7 @@ output:
     highlight: 'haddock'
     keep_md: yes
     toc: yes
-    toc_depth: 3
+    toc_depth: 2
     toc_float:
       collapsed: no
       smooth_scroll: yes
@@ -233,7 +233,11 @@ The files below are worth examining if you want to customize the stack.
 ./ShinyStudio/shinyproxy/config/templates/2col/index.html <-- 2 column layout HTML template.
 ```
 
-### Persistent Drivers
+## Persistent Files
+
+Within RStudio, the only content that persists is that which was saved to the "__ShinyStudio__" directory. R packages installed through RStudio are persistent as well and available to instances of Shiny. As of ShinyStudio v0.3.0, Python libraries and Powershell modules are persistent as well.
+
+### Non-persistent Drivers
 
 While R packages persist between sessions, installed libraries and drivers do not. To have persistent drivers, they must be built into the Docker image that contains shiny/rstudio. The Dockerfile that defines what goes into the image is here:
 
@@ -241,13 +245,39 @@ While R packages persist between sessions, installed libraries and drivers do no
 ./ShinyStudio/rshiny_rstudio/Dockerfile    <-- defines how to build / what to include in shiny/rstudio image
 ```
 
-In this file is an example that installs the Cloudera Impala ODBC drivers.
+In this file is an example that installs Cloudera Impala ODBC drivers.
 
 ## Updating ShinyStudio
 
-After editing site configurations, you will have to rebuild your ShinyStudio ecosystem with the command below. The same command will also pull the latest version of RStudio Server and Shiny Server.
+After editing site configurations, you will have to rebuild your ShinyStudio ecosystem with the command below.
 
 ```bash
+./control.sh setup
+```
+
+Remove existing Docker images and setup to pull the latest versions of RStudio Server and Shiny Server.
+
+```bash
+./control.sh remove && ./control.sh setup
+```
+
+## Reinstalling ShinyStudio
+
+Site content is never removed by any of the provided control scripts. Docker volumes, which contain R/Python/Powershell packages and usage data, are not removed either.
+
+To thoroughly remove and reinstall ShinyStudio:
+
+```bash
+# remove Docker containers & images.
+./control.sh remove
+
+# remove site content!
+sudo rm -rf /srv/shiny-server
+
+# removes all unused Docker volumes!
+docker volume prune
+
+# setup ShinyStudio
 ./control.sh setup
 ```
 

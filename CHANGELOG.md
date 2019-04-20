@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.0
+
+- Python 3 and PowerShell Core are now installed in the RStudio / Shiny image.
+- R, Python, and PowerShell packages are persistent.
+
 ## v0.2.0
 
 - RStudio / Shiny image is now built with a few additional packages and an ODBC driver for Cloudera Impala.
