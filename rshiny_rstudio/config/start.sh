@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# enter pyenv
+source "${VIRTUAL_ENV}/bin/activate"
+
 # setup $USER now
 mv -f /etc/cont-init.d/userconf /tmp/userconf.sh
 chmod +x /tmp/userconf.sh

@@ -49,6 +49,8 @@ services:
     volumes:
       - '${MOUNTPOINT}/${DESTSITE}:/home/${USER}/__ShinyStudio__'
       - 'r_libraries:/r-libs'
+      - 'py_environment:/pyenv'
+      - 'pwsh_modules:/home/${USER}/.local/share/powershell/Modules'
     environment:
       - USER=${USER}
       - USERID=${USERID}
@@ -56,6 +58,8 @@ services:
 volumes:
   influxdb_data:
   r_libraries:
+  py_environment:
+  pwsh_modules:
 
 networks:
   shinystudio-net:

@@ -44,7 +44,7 @@ proxy:
         USERID: ${USERID}
     - id: documents
       display-name: Documents
-      description: View shared documentation.
+      description: View shared documents.
       container-image: shinystudio_rshiny_rstudio
       container-network: shinystudio-net
       container-volumes:
@@ -88,6 +88,8 @@ proxy:
         - "${MOUNTPOINT}/${DESTSITE}:/home/#{proxy.userId}/__ShinyStudio__:z"
         - '${MOUNTPOINT}/.rstudio/#{proxy.userId}/user-settings:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z'
         - 'r_libraries:/r-libs'
+        - 'py_environment:/pyenv'
+        - 'pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
       container-env:
         USER: "#{proxy.userId}"
         USERID: ${USERID}
@@ -103,6 +105,8 @@ proxy:
         - "${MOUNTPOINT}:/home/#{proxy.userId}/__ShinyStudio__:z"
         - '${MOUNTPOINT}/.rstudio/#{proxy.userId}/user-settings:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z'
         - 'r_libraries:/r-libs'
+        - 'py_environment:/pyenv'
+        - 'pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
       container-env:
         USER: "#{proxy.userId}"
         USERID: ${USERID}
