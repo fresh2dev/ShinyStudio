@@ -47,8 +47,9 @@ services:
       - '8787:8787'
       - '3838:3838'
     volumes:
-      - '${MOUNTPOINT}/${DESTSITE}:/home/${USER}/__ShinyStudio__:z'
+      - "${MOUNTPOINT}/${DESTSITE}:/home/${USER}/__ShinyStudio__:z"
       - "${MOUNTPOINT}/users/${USER}:/home/${USER}/__Personal__:z"
+      - "${MOUNTPOINT}/${DESTSITE}/.log/${USER}:/var/log/shiny-server:z"
       - 'r_libraries:/r-libs'
       - 'py_environment:/pyenv'
       - 'pwsh_modules:/home/${USER}/.local/share/powershell/Modules'

@@ -55,8 +55,10 @@ COPY config/odbc/odbcinst.ini /etc/odbcinst.ini
 COPY config/odbc/odbc.ini /etc/odbc.ini
 
 # copy custom run commands.
-COPY config/rserver.conf /etc/rstudio/rserver_custom.conf
 COPY config/run /etc/services.d/rstudio/run
+# custom configs
+COPY config/rserver.conf /etc/rstudio/rserver_custom.conf
+COPY config/shiny-server.conf /etc/shiny-server/shiny-server.conf
 
 # copy custom start command and make it executable.
 COPY config/start.sh /start.sh

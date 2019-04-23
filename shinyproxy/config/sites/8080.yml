@@ -37,7 +37,10 @@ proxy:
       container-network: shinystudio-net
       container-volumes:
         - "${MOUNTPOINT}/${DESTSITE}/_apps:/srv/shiny-server:z"
+        - "${MOUNTPOINT}/${DESTSITE}/.log/#{proxy.userId}:/var/log/shiny-server:z"
         - 'r_libraries:/r-libs'
+        - 'py_environment:/pyenv'
+        - 'pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
       access-groups: [ 'superadmins', 'admins', 'readers' ]
       container-env:
         USER: "#{proxy.userId}"
@@ -49,7 +52,10 @@ proxy:
       container-network: shinystudio-net
       container-volumes:
         - "${MOUNTPOINT}/${DESTSITE}/_docs:/srv/shiny-server:z"
+        - "${MOUNTPOINT}/${DESTSITE}/.log/#{proxy.userId}:/var/log/shiny-server:z"
         - 'r_libraries:/r-libs'
+        - 'py_environment:/pyenv'
+        - 'pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
       access-groups: [ 'superadmins', 'admins', 'readers' ]
       container-env:
         USER: "#{proxy.userId}"
@@ -61,7 +67,10 @@ proxy:
       container-network: shinystudio-net
       container-volumes:
         - "${MOUNTPOINT}/${DESTSITE}:/srv/shiny-server:z"
+        - "${MOUNTPOINT}/${DESTSITE}/.log/#{proxy.userId}:/var/log/shiny-server:z"
         - 'r_libraries:/r-libs'
+        - 'py_environment:/pyenv'
+        - 'pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
       access-groups: [ 'admins' ]
       container-env:
         USER: "#{proxy.userId}"
@@ -73,7 +82,10 @@ proxy:
       container-network: shinystudio-net
       container-volumes:
         - "${MOUNTPOINT}:/srv/shiny-server:z"
+        - "${MOUNTPOINT}/${DESTSITE}/.log/#{proxy.userId}:/var/log/shiny-server:z"
         - 'r_libraries:/r-libs'
+        - 'py_environment:/pyenv'
+        - 'pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
       access-groups: [ 'superadmins' ]
       container-env:
         USER: "#{proxy.userId}"
