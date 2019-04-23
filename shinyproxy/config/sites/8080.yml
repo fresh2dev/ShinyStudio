@@ -86,7 +86,8 @@ proxy:
       container-network: shinystudio-net
       container-volumes:
         - "${MOUNTPOINT}/${DESTSITE}:/home/#{proxy.userId}/__ShinyStudio__:z"
-        - '${MOUNTPOINT}/.rstudio/#{proxy.userId}/user-settings:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z'
+        - "${MOUNTPOINT}/.rstudio/#{proxy.userId}/user-settings:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z"
+        - "${MOUNTPOINT}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
         - 'r_libraries:/r-libs'
         - 'py_environment:/pyenv'
         - 'pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
@@ -104,6 +105,7 @@ proxy:
       container-volumes:
         - "${MOUNTPOINT}:/home/#{proxy.userId}/__ShinyStudio__:z"
         - '${MOUNTPOINT}/.rstudio/#{proxy.userId}/user-settings:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z'
+        - "${MOUNTPOINT}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
         - 'r_libraries:/r-libs'
         - 'py_environment:/pyenv'
         - 'pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
