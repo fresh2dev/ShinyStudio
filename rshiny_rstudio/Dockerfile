@@ -34,7 +34,8 @@ RUN apt-get update && \
 # install python packages
 ENV PATH "${VIRTUAL_ENV}/bin:${PATH}"
 RUN echo "export PATH=\"${VIRTUAL_ENV}/bin:\${PATH}\"" >> /etc/profile && \
-    pip install --upgrade pip && \
+    pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org --upgrade pip && \
+    pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org wheel && \
     pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org \
         wheel Cython numpy matplotlib pandas tqdm ezpq paramiko requests
 
