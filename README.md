@@ -1,4 +1,3 @@
-
 ShinyStudio
 ================
 
@@ -45,7 +44,11 @@ The ShinyStudio ecosystem primarily consists of the products described below:
 How to get it
 -------------
 
-Prereqs: \* [Docker](https://docs.docker.com/install/linux/docker-ce/debian/) / [Docker for Mac](https://docs.docker.com/docker-for-mac/install/) \* [Docker Compose](https://docs.docker.com/compose/install/) \* [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+Prereqs:
+
+-   [Docker](https://docs.docker.com/install/linux/docker-ce/debian/) / [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
+-   [Docker Compose](https://docs.docker.com/compose/install/)
+-   [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 Setup your ShinyStudio site with:
 
