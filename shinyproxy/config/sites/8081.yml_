@@ -5,7 +5,7 @@ proxy:
   hide-navbar: false
   logo-url: file:///opt/shinyproxy/templates/grid-layout/assets/img/shinystudio.png
   favicon-path: /opt/shinyproxy/templates/grid-layout/assets/img/shinystudio.png
-  template-path: ./templates/grid-layout # or [1-2]col
+  template-path: ./templates/grid-layout
   ### AUTHENTICATION ###
   authentication: none
   ### DANGER ZONE ###

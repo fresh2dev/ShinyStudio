@@ -1,254 +1,149 @@
+
 ShinyStudio
 ================
 
+![](https://i.imgur.com/rtd29qC.png)
+
+![](https://i.imgur.com/FIzE0d7.png)
+
 - [What is ShinyStudio?](#what-is-shinystudio)
-  - [Motivation](#motivation)
 - [How to get it](#how-to-get-it)
-- [Basic Use](#basic-use)
-  - [Create some content](#create-some-content)
-  - [Backup / Export Content](#backup--export-content)
-- [Basic Configuration](#basic-configuration)
-  - [Default Roles](#default-roles)
+- [Access](#access)
+- [Develop](#develop)
+  - [Tools](#tools)
+- [Content](#content)
+- [Configuration](#configuration)
+  - [Security](#security)
   - [Multiple Sites](#multiple-sites)
-- [Customized Setup](#customized-setup)
-- [Persistent Files](#persistent-files)
-- [Updating ShinyStudio](#updating-shinystudio)
 - [Reinstalling ShinyStudio](#reinstalling-shinystudio)
-- [Setup Conclusion](#setup-conclusion)
-- [Appendix](#appendix)
-  - [Backstory](#backstory)
-  - [Comparison](#comparison)
-  - [Contributing](#contributing)
+- [References](#references)
+- [Contributing](#contributing)
 
-## What is ShinyStudio?
+What is ShinyStudio?
+--------------------
 
-The ShinyStudio project is an orchestration of Docker services that
-allows for easy, free, and secure development and hosting of rich,
-interactive content with RStudio and Shiny Server, secured with
-ShinyProxy.
+> NOTE: v1.0.0 is a major overhaul that includes *many* changes that are not backwards compatible. If you are running an existing version, backup existing content and re-setup from scratch.
 
-The ShinyStudio ecosystem primarily consists of the products described
-below. If you are unfamiliar with some or all of them, keep calm and
-read on.
+The ShinyStudio project is an orchestration of Docker services with the goal of providing:
 
-  - [RStudio Server](https://www.rstudio.com/): RStudio Server is a
-    hosted instance of the RStudio, the development environment for
-    authoring applications and documents in R. When you think RStudio,
-    think *R development*.
-  - [Shiny Server](https://shiny.rstudio.com/): Shiny is a web framework
-    and Shiny Server is the web server component to serve and display
-    created content. When you think Shiny, think *interactive
-    presentation* of content.
-  - [ShinyProxy](https://www.shinyproxy.io/): ShinyProxy is an
-    open-source tool used to provide a secure entrypoint into the
-    ShinyStudio ecosystem and is the driver behind on-demand invocation
-    of Docker containers containing instances of RStudio or Shiny
-    Server. When you think ShinyProxy, think *security and Docker
-    container management*.
-  - [Docker](https://www.docker.com/resources/what-container): Docker
-    allows creating and deploying “containerized” instances of a
-    service. In the ShinyStudio ecosystem, RStudio Server, Shiny Server,
-    and ShinyProxy are all services delivered in a container. When you
-    think Docker, think *configurable, scalable, containerized
-    services*.
+-   a collaborative, self-hosted development environment with a choice of IDE (RStudio or VS Code).
+-   a centralized document repository, capable of displaying pre-rendered HTML, Markdown, or live, interactive RMarkdown documents.
+-   a secure method for sharing web apps developed with RStudio Shiny.
 
-![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/content/_docs/ShinyStudio/img/shinyrstudio.png)
+The ShinyStudio ecosystem primarily consists of the products described below:
 
-> ShinyStudio is not a product; it is a project / ecosystem wholly
-> composed of the above products. ShinyStudio is not affiliated or
-> supported by RStudio or OpenAnalytics. Anyone benefitting from this
-> project should direct their appreciation to the developers of these
-> products, RStudio, OpenAnalytics, and Docker.
+-   [ShinyProxy](https://www.shinyproxy.io/) (Reverse proxy & Docker manager)
+-   [Shiny Server](https://shiny.rstudio.com/) (Web Server)
+-   [RStudio Server](https://www.rstudio.com/) (IDE)
+-   [VS Code](https://code.visualstudio.com/), modified by [Coder.com](https://coder.com/) (IDE)
+-   [Docker](https://www.docker.com/resources/what-container) (Containers)
 
-### Motivation
+![](https://i.imgur.com/ppQsjIx.png)
 
-If you have heard of the R language, you may rightfully associate it
-with advanced statistical computing, machine learning and the like. In
-recent years, however, the folks at RStudio have done amazing things
-with R, both with RStudio and the R Shiny web framework. With their
-products, R becomes an invaluable tool for creating rich, modern
-applications and documents.
+> ShinyStudio is not a product; it is a project / ecosystem wholly composed of the above products. ShinyStudio is not affiliated with or supported by RStudio, Microsoft, or OpenAnalytics.
 
-The problem is, when it comes to sharing the content, free options are
-limiting and other options are… not free. ShinyStudio leverages
-ShinyProxy to bring some essential features to the free versions of
-RStudio and R Shiny, such as authentication and multiple sessions.
+How to get it
+-------------
 
-If you need enterprise-level abilities and support from RStudio,
-consider premium solutions such as [RStudio Server
-Pro](https://www.rstudio.com/products/rstudio-server-pro/), [Shiny
-Server Pro](https://www.rstudio.com/products/shiny-server-pro/), and
-[RStudio Connect](https://www.rstudio.com/products/connect/).
+Prereqs: \* [Docker](https://docs.docker.com/install/linux/docker-ce/debian/) / [Docker for Mac](https://docs.docker.com/docker-for-mac/install/) \* [Docker Compose](https://docs.docker.com/compose/install/) \* [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
-If your Shiny app / RMarkdown document is for public consumption and has
-no need for authentication, explore these free-mium options for hosting
-your content: (1) [shinyapps.io](https://www.shinyapps.io/) for hosting
-Shiny apps or (2) [rpubs.com](https://rpubs.com/) for hosting static
-RMarkdown docs.
-
-If you’re struggling to decide between “totally free” and “totally
-secure”, the ShinyStudio project can help bridge the gap.
-
-## How to get it
-
-Every component of the ShinyStudio project is delivered with Docker. To
-get started, you do not need to know Docker, but you need to install
-Docker and [Docker Compose](https://docs.docker.com/compose/install/).
-See Docker install instructions for [Debian
-Linux](https://docs.docker.com/install/linux/docker-ce/debian/),
-[CentOS](https://docs.docker.com/install/linux/docker-ce/centos/),
-[Mac](https://docs.docker.com/docker-for-mac/install/). I have not
-designed or tested this process on Docker for Windows, but that is in
-the future plans.
-
-Once you get to a point where you can execute `docker info` with no
-errors, you can proceed with the rest of this guide.
-
-After installing Docker and Docker Compose, setup your ShinyStudio site
-with:
+Setup your ShinyStudio site with:
 
 ``` text
-# clone this repository.
+# Clone this repository.
 git clone https://github.com/dm3ll3n/ShinyStudio
 
-# enter it.
+# Enter the new directory.
 cd ShinyStudio
 
-# setup site(s) with default configuration.
+# Setup and run.
 ./control.sh setup
 ```
 
-This operation can take a few minutes, as it is downloading all the
-requisite components (RStudio Server, Shiny Server, ShinyProxy) along
-with the default set of R packages.
+This operation can take a few minutes.
 
-Once complete, you can confirm that the necessary services are running
-by executing `docker ps`. You should see both `shinystudio_shinyproxy`
-and `shinystudio_influxdb` in the resulting output.
+Once complete, open a web browser and navigate to `http://localhost:8080`.
 
-Once complete, open a web browser and navigate to
-`http://localhost:8080`. When prompted, sign in with the username
-`admin` and the password `admin`.
+The default logins are: \* `user`: `user` \* `admin`: `admin` \* `superadmin`: `superadmin`
 
-![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/content/_docs/ShinyStudio/img/1554226694.png)
+Access
+------
 
-You are now in the ShinyStudio ecosystem, ready to consume content with
-Shiny Server or produce content with RStudio Server.
+Authentication is managed by ShinyProxy, which supports basic auth, LDAP, Kerberos, and others ([read more](https://www.shinyproxy.io/configuration/)).
 
-## Basic Use
+ShinyStudio defines three levels of access:
 
-At this point, you should have a running and accessible instance of
-ShinyProxy, the gateway into the ShinyStudio ecosystem. When you sign in
-with the `admin` account, you will see four tiles:
+-   readers: can only view content from "Apps & Reports", "Documents", and "Personal".
+-   admins: can view all site content and develop content with RStudio and VS Code.
+-   superadmins: can view and develop site content across multiple instances of ShinyStudio.
 
-1.  Apps & Reports: open an instance of Shiny Server to view
-    *applications* hosted on this site.
-2.  Documents: open an instance of Shiny Server to view *documents*
-    hosted on this site.
-3.  All Content: (admin only) opens an instance of Shiny Server directed
-    to the root directory of this site.
-4.  RStudio: (admin only) opens an instance of RStudio Server for
-    creating site content.
+Admin/Superadmin landing page:
 
-![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/content/_docs/ShinyStudio/img/1554226778.png)
+![](https://i.imgur.com/rtd29qC.png)
 
-Open RStudio to begin creating your own content. In the file explorer
-pane of RStudio (bottom-right), you will see a folder named
-"\_\_ShinyStudio\_\_“; that folder contains all the content for the
-site. *Everything* outside of the”\_\_ShinyStudio**" directory will be
-purged after exiting RStudio. That is because each instance of RStudio
-is spun up in its own Docker container that is destroyed after each use
-(more on this later). Only files created/modified within the
-"\_\_ShinyStudio**" folder will persist between sessions.
+Readers:
 
-![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/content/_docs/ShinyStudio/img/1554226835.png)
+![](https://i.imgur.com/LupXe8f.png)
 
-> *Everything* outside of the "\_\_ShinyStudio\_\_" directory will be
-> purged after exiting RStudio. Only files created/modified within the
-> "\_\_ShinyStudio\_\_" folder will persist between sessions.
+Develop
+-------
 
-### Create some content
+Open your IDE of choice and notice two important directories:
 
-There is great documentation for getting started with
-[Shiny](https://shiny.rstudio.com/tutorial/) and
-[RMarkdown](https://rmarkdown.rstudio.com/articles_intro.html). For now,
-just create a new RMarkdown document by clicking `File > New File > R
-Markdown`, or by opening one of the templates in the `templates` folder.
-Edit the file, then `File > Save As...`, and save it to
-`__ShinyStudio__/_docs/My Document/document.Rmd`.
+-   \_\_ShinyStudio\_\_
+-   \_\_Personal\_\_
 
-> To properly serve the content, it is important that you place your
-> document(s) in a folder. The folder name is what is displayed as the
-> content title in Shiny Server.
+![](https://i.imgur.com/ac7iKDH.png)
 
-Now, with the file saved under
-`__ShinyStudio__/_docs/{TITLE}/{FILE}.Rmd`, browse to the ShinyStudio
-home screen, select the “Documents” pane, and you will see your rendered
-document.
+**Files must be saved in either of these two directories in order to persist between sessions.**
 
-![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/content/_docs/ShinyStudio/img/1554232012.png)
+These two folders are shared between instances RStudio, VS Code, and Shiny Server. So, creating new content is as simple as saving a file to the appropriate directory.
 
-All content within the "\_\_ShinyStudio\_\_" folder is viewable from the
-“Site Content” pane. Only content in the "\_apps" and "\_docs" folder is
-viewable by a standard users.
+![](https://i.imgur.com/lAuTMgB.png)
 
-So, admins can place content within "\_\_ShinyStudio\_\_“, but outside
-of”\_apps" or "\_docs" in order to develop and test their work before
-giving access to a standard user.
+### Tools
 
-![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/content/_docs/ShinyStudio/img/1554226895.png)
+The ShinyStudio ecosystem comes with...
 
-Note that the differentiation between “apps” and “docs” is purely for
-organization; there’s no harm in, say, putting a document in the
-"\_apps" folder or vice versa.
+-   R
+-   Python
+-   PowerShell
 
-It’s as simple as that, and the process for creating Shiny apps is
-almost exactly the same.
+...and ODBC drivers for:
 
-### Backup / Export Content
+-   SQL Server
+-   PostgresSQL
+-   Cloudera Impala.
 
-To persist content as Docker containers are created and destroyed, all
-site content is stored on the host server at `/srv/shiny-server/{PORT}`
-(by default). Thus, you can use whatever method you want to backup and
-restore content in this folder.
+These are persistent because they are built into the image.
 
-In addition, site admins can use RStudio to download a zip of all the
-content in the "\_\_ShinyStudio\_\_" directory. Also, it’s a good idea
-to initialize a git repo in this here; RStudio has a useful git
-interface for managing versions of apps and documents.
+Apps / drivers installed through RStudio/VS Code will *not* persist.
 
-![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/content/_docs/ShinyStudio/img/1554226952.png)
+Libraries for R, Python, and PowerShell *will* persist. Additionally, user workspace settings (e.g. themes) are persistent.
 
-You may notice the hidden directory `/srv/shiny-server/.rstudio`. This
-contains user preferences within RStudio. While session states are not
-saved between instances of RStudio, user preferences (e.g., theme, font)
-are persistent. You may want to include this in your backups.
+Content
+-------
 
-## Basic Configuration
+All persisted content is stored locally on the host system at:
 
-When ShinyProxy is running, your site’s content is accessible by others
-over port `8080` (by default). It is a good idea to apply a custom
-security configuration before going any further.
+``` text
+/srv/shinystudio
+```
 
-ShinyProxy offers a variety of authentication mechanisms, detailed
-[here](https://www.shinyproxy.io/configuration/). To alter your sites
-security, modify the configuration file for that site.
+To store files in another directory, edit the `MOUNTPOINT` variable in `control.sh`.
 
-To do nothing other than change the default passwords, locate the config
-file for the site hosted on port 8080; you can find it here:
+Configuration
+-------------
+
+### Security
+
+To apply a custom security configuration, modify the ShinyProxy configuration file for the site. All available options are detailed [here](https://www.shinyproxy.io/configuration/).
 
 ``` text
 ./shinyproxy/config/sites/8080.yml
 ```
 
-> In this folder, you will see example configurations that have been
-> disabled. These provide examples of using ShinyProxy with basic auth
-> (default), social auth, Active Directory auth, and no auth. These also
-> show how you can easily switch from a 2-column layout to a 1-column
-> layout in ShinyProxy.
-
-Open `8080.yml` in your editor of choice. Then, locate and edit the
-following lines as desired:
+Open `8080.yml` and edit the following lines as desired:
 
 ``` text
 authentication: simple
@@ -264,309 +159,73 @@ users:
     groups: readers
 ```
 
-Once you’ve made the desired edits, setup the site again with:
+After modifying any part of the configuration, stop and re-setup the site with:
 
 ``` bash
 ./control.sh setup
 ```
 
-### Default Roles
-
-By default, ShinyStudio defines three levels of access:
-
-  - readers: can only view content from “Apps & Reports” or “Documents”.
-  - admins: can view all site content and develop content with RStudio.
-  - superadmins: can view and develop site content across multiple
-    sites.
-
 ### Multiple Sites
 
-Spawning multiple instances of ShinyProxy is an uncomplicated process.
-This can be useful to segment content or provide unique customizations,
-as each site own configuration, port, and content.
+Multiple sites can be useful to segment content or provide unique customizations.
 
-To create a new site, copy an existing site configuration, make the
-desired edits, and name the new file with the desired port number.
-
-The default setup spawns one instance of ShinyProxy at the default port
-8080.
-
-``` text
-./shinyproxy/config/sites/8080.yml
-```
-
-![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/content/_docs/ShinyStudio/img/1554255282.png)
-
-#### Add Sites
-
-The setup below will spawn three unique, independent instances of
-ShinyProxy, hosted on ports 8080, 8081, and 8082.
+The configs below will setup two unique, independent instances of ShinyStudio, hosted on ports 8080, 8081.
 
 ``` text
 ./shinyproxy/config/sites/8080.yml
 ./shinyproxy/config/sites/8081.yml
-./shinyproxy/config/sites/8082.yml
 ```
 
-![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/content/_docs/ShinyStudio/img/1554255306.png)
-
-> Note: ShinyProxy logs usage to InfluxDB, which is typically served on
-> port 8086. To avoid conflicts with multiple ShinyProxy sites, InfluxDB
-> is served on port 8886 in the ShinyStudio ecosystem.
-
-#### Disable Sites
-
-To disable a site, just the extension of its config file. In the setup
-below, only sites 8080 and 8082 will be hosted.
-
-``` text
-./shinyproxy/config/sites/8080.yml
-./shinyproxy/config/sites/8081.yml_
-./shinyproxy/config/sites/8082.yml
-```
+![](https://i.imgur.com/xnIuVTW.png)
 
 #### Shared Content
 
-It is possible to have two sites with independent configurations have
-access to the same content. To do this, name the file `PORT_SITE.yml`,
-where `PORT` is the port to broadcast on, and `SITE` is the port number
-of the site that already has content.
-
-In the setup below, three unique instances of ShinyProxy will be
-invoked, hosted on ports 8080, 8081, and 8082. However, each site
-contains the same content (from 8080), and any changes to content in one
-site will be reflected in another.
+It is possible to have multiple sites with independent configurations have access to the same content. To do this, name the file `PORT_SITE.yml`, where `PORT` is the port to broadcast on, and `SITE` is the port number of the site that already has content.
 
 ``` text
 ./shinyproxy/config/sites/8080.yml
 ./shinyproxy/config/sites/8081_8080.yml
-./shinyproxy/config/sites/8082_8080.yml
 ```
 
-![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/content/_docs/ShinyStudio/img/1554255374.png)
+![](https://i.imgur.com/lgKdx93.png)
 
-## Customized Setup
+Reinstalling ShinyStudio
+------------------------
 
-The files below are worth examining if you want to customize the
-    stack.
+> Site content is never removed by any of the provided control scripts; you must do this manually, if desired.
 
-    ./ShinyStudio/control.sh                       <-- entrypoint for site setup and control. 
-    ./ShinyStudio/controls                         <-- contains scripts for setup, restart, stop, etc.
-    ./ShinyStudio/controls/content                 <-- contains initial content for a new site.
-    ./ShinyStudio/docker-compose.yml               <-- defines how to run and build the various docker images.
-    ./ShinyStudio/rshiny_rstudio/Dockerfile        <-- defines how to build / what to include in shiny/rstudio image
-    ./ShinyStudio/rshiny_rstudio/config/odbc       <-- contains odbc config files to build into the image.
-    ./ShinyStudio/rshiny_rstudio/config/start.sh   <-- performs actions before each launch, then starts shiny/rstudio.
-    ./ShinyStudio/shinyproxy/Dockerfile            <-- defines how to build shinyproxy image.
-    ./ShinyStudio/shinyproxy/config/sites          <-- contains site definitions.
-    
-    ./ShinyStudio/shinyproxy/config/templates/1col/index.html <-- 1 column layout HTML template.
-    ./ShinyStudio/shinyproxy/config/templates/2col/index.html <-- 2 column layout HTML template.
-
-## Persistent Files
-
-Within RStudio, the only content that persists is that which was saved
-to the “**ShinyStudio**” directory. R packages installed through RStudio
-are persistent as well and available to instances of Shiny. As of
-ShinyStudio v0.3.0, Python libraries and Powershell modules are
-persistent as well.
-
-### Non-persistent Drivers
-
-While R packages persist between sessions, installed libraries and
-drivers do not. To have persistent drivers, they must be built into the
-Docker image that contains shiny/rstudio. The Dockerfile that defines
-what goes into the image is
-    here:
-
-    ./ShinyStudio/rshiny_rstudio/Dockerfile    <-- defines how to build / what to include in shiny/rstudio image
-
-In this file is an example that installs Cloudera Impala ODBC drivers.
-
-## Updating ShinyStudio
-
-Download the latest revision of the ShinyStudio stack with:
-
-``` text
-git clone https://github.com/dm3ll3n/ShinyStudio
-```
-
-After editing site configurations, build your ShinyStudio ecosystem
-with:
+To thoroughly remove and reinstall ShinyStudio:
 
 ``` bash
-./control.sh setup
-```
-
-Remove existing Docker images and re-setup to pull the latest versions
-of RStudio Server and Shiny Server.
-
-``` bash
-./control.sh remove && ./control.sh setup
-```
-
-## Reinstalling ShinyStudio
-
-Site content is never removed by any of the provided control scripts.
-Docker volumes are not removed either. These contain R/Python/Powershell
-packages and usage data.
-
-To thoroughly remove ShinyStudio, **including site content and Docker
-volumes**:
-
-``` bash
-# remove Docker containers & images.
+# remove ShinyStudio Docker containers & images.
 ./control.sh remove
 
 # remove site content!
-sudo rm -rf /srv/shiny-server
+sudo rm -rf "$MOUNTPOINT"
 
-# removes all unused Docker volumes!
+# removes *all* unused Docker volumes!
 docker volume prune
 
-# re-setup ShinyStudio if desired
+# setup ShinyStudio
 ./control.sh setup
 ```
 
-## Setup Conclusion
+By removing existing images, the setup will pull the latest versions of the base Docker image for RStudio/Shiny.
 
-At this point, you should have one or more ShinyStudio sites, accessible
-and secured with ShinyProxy. It is my goal that this ecosystem is
-valuable to both technical and non-technical audiences, to both R
-statisticians and college notetakers.
+References
+----------
 
-The information below is not essential to the use of the ShinyStudio
-ecosystem, so feel free to stop here and get to creating\!
+-   <https://www.shinyproxy.io/>
+-   <https://telethonkids.wordpress.com/2019/02/08/deploying-an-r-shiny-app-with-docker/>
+-   <https://appsilon.com/alternatives-to-scaling-shiny>
 
-## Appendix
-
-### Backstory
-
-I had the goal of having a secured Shiny Server that would be usable by
-people with no experience with RStudio, Docker, Git. A quick search led
-me to [ShinyProxy.io](https://www.shinyproxy.io/), which is what drives
-this solution.
-
-Aside from the thorough documentation on their site, I landed on this
-[article from Paul Stevenson of the Telethon Kids
-Institute](https://telethonkids.wordpress.com/2019/02/08/deploying-an-r-shiny-app-with-docker/)
-in which he describes [his ShinyProxy / Shiny Server Docker
-stack](https://github.com/TelethonKids/deploy_shiny_app). His stack is
-tidy, well-explained, and includes an NGINX proxy and automatic SSL
-configuration that are essentially required if you want ShinyProxy to be
-internet-facing.
-
-There were two major problems I had with documented approaches which
-invoke the Shiny R package via standalone instances of R:
-
-  - Tedius effort involved in “containerizing” *each* app/doc to be
-    hosted.
-  - Downloading and compiling libraries for *each* app/doc can take
-    several minutes.
-  - ShinyProxy requires an edit to the `application.yml` file, followed
-    by a restart, for *each* new app/doc.
-
-These two limitations result in content creation being both a tedious
-and service-interrupting event. I wanted a reliable system that had a
-low learning curve and facilitated rapid development of content.
-
-On the search for alternative approaches, I found [this article from
-Appsilon.com](https://appsilon.com/alternatives-to-scaling-shiny) which
-featured some [useful and though-provoking
-diagrams](https://appsilon.com/assets/uploads/2018/12/Scaling-Shiny-1.png)
-on the matter.
-
-It was while reviewing those diagrams that I came to the conclusion that
-it would be better to “containerize” Shiny Server for invocation with
-ShinyProxy, as opposed to individual instances of standlone R. That
-simple trick is the magic to the ShinyStudio approach.
-
-### ShinyProxy: documented approach
-
-![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/content/_docs/ShinyStudio/img/1554234336.png)
-
-### ShinyProxy: the ShinyStudio approach
-
-![](https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/content/_docs/ShinyStudio/img/1554234393.png)
-
-### Comparison
-
-There are trade-offs between the two ShinyProxy workflows, discussed
-below.
-
-|                   |   R Standalone    |     Shiny Server      |
-| :---------------: | :---------------: | :-------------------: |
-|   R environment   |    Independent    |        Shared         |
-|  Authentication   |     Low-level     |      High-level       |
-|    Access logs    |     Low-level     |      High-level       |
-|   Docker images   |       Many        |          One          |
-| Docker containers |       Many        |         Fewer         |
-| Content delivery  | Manual w/ Restart | Automatic; No restart |
-
-**R environment**
-
-By packaging each app into a Docker image, each apps is independent of
-others and has a unique set of R libraries at its disposal.
-
-In the ShinyStudio ecosystem, all apps share the same image which
-contains both RStudio and Shiny Server and all the R libraries. This
-facilitates rapid development, but can be an issue if you have two apps
-with conflicting dependency requirements.
-
-**Authentication**
-
-ShinyProxy allows group-based authentication to each Docker image. When
-each Docker image is an individual app, you have granular security
-controls for each app.
-
-In the ShinyStudio ecosystem, you can control who can see “Apps &
-Reports”, who can see “Documents”, and who can author content with
-RStudio, but you cannot control *which* apps or documents they have
-access to.
-
-**Access logs**
-
-ShinyProxy logs the logins and Docker image launches. When each Docker
-image is an individual app, you have granular access logs.
-
-In the ShinyStudio ecosystem, logs are generated when a user opens a
-particular pane, but which apps/docs they access from there are not
-logged.
-
-**Images / Containers**
-
-Naturally, when each app has its own Docker image, you’ll have a lot of
-images. Likewise, if each app invocation spawns a new container, one
-user could feverishly spawn many containers.
-
-In the ShinyStudio ecosystem, there is only one image for RStudio and
-Shiny, and content is stored externally. Containers are spun up when a
-new instance of Shiny / RStudio Server is needed, e.g. when a user
-accesses “Apps & Reports”. Accessing multiple apps within this container
-will not spawn new containers; the apps will share the resources of the
-executing Shiny Server container.
-
-**Content delivery**
-
-As stated earlier, changes to the list of Docker images available to
-ShinyProxy requires a restart of ShinyProxy itself, which is not ideal
-for rapid development.
-
-In the ShinyStudio ecosystem, spawned instances of Shiny Server have
-immediate access to the latest apps and docs in the site’s directory.
-
-### Contributing
+Contributing
+------------
 
 Pull requests are welcome and appreciated, particularly with:
 
-  - \[ \] Enhance the setup experience (e.g., parameterizing control.sh)
-  - \[ \] Load common database drivers in RStudio/Shiny Docker image.
-  - \[ \] Better panel icons, enhance ShinyProxy index page, or other
-    HTML/CSS enhancements; Allow for customizing navbar colors for each
-    site.
-  - \[ \] Cross-site content access for non-admin users, probably with a
-    Python script pre-launch.
-  - \[ \] Enable Shiny bookmark functionality.
-  - \[ \] Shiny app to serve as searchable index page for each section.
-  - \[ \] Shiny app for viewing ShinyProxy events from InfluxDB.
-  - \[ \] Automated SSL setup
+-   \[ \] Enhance the setup experience (e.g., parameterizing control.sh)
+-   \[ \] Enable Shiny bookmark functionality.
+-   \[ \] Shiny app to serve as searchable index page for each section.
+-   \[ \] Shiny app for viewing ShinyProxy events from InfluxDB.
+-   \[ \] Automated SSL setup

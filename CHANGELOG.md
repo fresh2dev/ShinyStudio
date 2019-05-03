@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.0.0
+
+> This version is a major overhaul that includes *many* changes that are not backwards compatible. If you are running an existing version, backup existing content and re-setup from scratch.
+
+- Added VS Code with persistent user-specific extensions and workspace settings. 
+- Added new "__Personal__" directory to store and persist user-specific content.
+- Restuctured content directories.
+- Redesigned landing page.
+- Added example content illustrating how to serve pre-rendered Jupyter notebooks.
+- Added drivers for SQL Server and Postgres.
+
 ## v0.3.0
 
 - Python 3 and PowerShell Core are now installed in the RStudio / Shiny image.
