@@ -1,0 +1,25 @@
+{
+    "workbench.editor.enablePreview": false,
+    "mssql.connections": [
+        {
+            "server": "localhost",
+            "database": "",
+            "authenticationType": "SqlLogin",
+            "user": "sa",
+            "password": "",
+            "emptyPasswordInput": false,
+            "savePassword": false,
+            "profileName": "Example"
+        }
+    ],
+    "markdown.extension.toc.updateOnSave": false,
+    "files.associations": {
+        "*.Rmd": "markdown"
+    },
+    "python.venvPath": "/pyenv",
+    "python.jediEnabled": false,
+    "python.dataScience.useDefaultConfigForJupyter": false,
+    "python.dataScience.searchForJupyter": false,
+    "python.dataScience.changeDirOnImportExport": false,
+    
+}

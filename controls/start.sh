@@ -7,11 +7,13 @@ for site_config in ./shinyproxy/config/sites/*.yml; do
 	SITEPORT=$(echo $SITEID | cut -d '_' -f1)
 	DESTSITE=$(echo $SITEID | cut -d '_' -f2)
 
+	SITEDIR="${MOUNTPOINT}/content/sites/${DESTSITE}"
+
 	echo "*** Starting"
 
-	if [ ! -d "${MOUNTPOINT}/${DESTSITE}" ]; then
-		mkdir "${MOUNTPOINT}/${DESTSITE}" 
-		cp -R ./content/* "${MOUNTPOINT}/${DESTSITE}"
+	if [ ! -d "$SITEDIR" ]; then
+		mkdir -p "$SITEDIR"
+		cp -RT "./content" "$SITEDIR"
 	fi
 
 	docker-compose run -d --service-ports -e SITEID=$SITEID -e DESTSITE=$DESTSITE -e MOUNTPOINT="$MOUNTPOINT" shinyproxy

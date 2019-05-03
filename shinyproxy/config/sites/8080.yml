@@ -32,12 +32,13 @@ proxy:
   specs:
     - id: reports
       display-name: Apps & Reports
-      description: View Shiny applications and reports.
-      container-image: shinystudio_rshiny_rstudio
+      logo-url: 'fas fa-chart-line'
+      container-image: shinystudio_rstudio_rshiny_vscode
+      container-cmd: ["/start.sh", "shiny-server"]
       container-network: shinystudio-net
       container-volumes:
-        - "${MOUNTPOINT}/${DESTSITE}/_apps:/srv/shiny-server:z"
-        - "${MOUNTPOINT}/${DESTSITE}/.log/#{proxy.userId}:/var/log/shiny-server:z"
+        - "${MOUNTPOINT}/content/sites/${DESTSITE}/_apps:/srv/shiny-server:z"
+        - "${MOUNTPOINT}/logs/${DESTSITE}/#{proxy.userId}:/var/log/shiny-server:z"
         - 'shinystudio_r_libraries:/r-libs'
         - 'shinystudio_py_environment:/pyenv'
         - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
@@ -47,12 +48,13 @@ proxy:
         USERID: ${USERID}
     - id: documents
       display-name: Documents
-      description: View shared documents.
-      container-image: shinystudio_rshiny_rstudio
+      logo-url: 'fas fa-file-alt'
+      container-image: shinystudio_rstudio_rshiny_vscode
+      container-cmd: ["/start.sh", "shiny-server"]
       container-network: shinystudio-net
       container-volumes:
-        - "${MOUNTPOINT}/${DESTSITE}/_docs:/srv/shiny-server:z"
-        - "${MOUNTPOINT}/${DESTSITE}/.log/#{proxy.userId}:/var/log/shiny-server:z"
+        - "${MOUNTPOINT}/content/sites/${DESTSITE}/_docs:/srv/shiny-server:z"
+        - "${MOUNTPOINT}/logs/${DESTSITE}/#{proxy.userId}:/var/log/shiny-server:z"
         - 'shinystudio_r_libraries:/r-libs'
         - 'shinystudio_py_environment:/pyenv'
         - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
@@ -60,69 +62,96 @@ proxy:
       container-env:
         USER: "#{proxy.userId}"
         USERID: ${USERID}
-    - id: content
-      display-name: Site Content
-      description: View site content.
-      container-image: shinystudio_rshiny_rstudio
+    - id: personal
+      display-name: Personal
+      logo-url: 'far fa-folder-open'
+      container-image: shinystudio_rstudio_rshiny_vscode
+      container-cmd: ["/start.sh", "shiny-server"]
       container-network: shinystudio-net
       container-volumes:
-        - "${MOUNTPOINT}/${DESTSITE}:/srv/shiny-server:z"
-        - "${MOUNTPOINT}/${DESTSITE}/.log/#{proxy.userId}:/var/log/shiny-server:z"
+        - "${MOUNTPOINT}/content/users/#{proxy.userId}:/srv/shiny-server:z"
         - 'shinystudio_r_libraries:/r-libs'
         - 'shinystudio_py_environment:/pyenv'
         - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
-      access-groups: [ 'admins' ]
-      container-env:
-        USER: "#{proxy.userId}"
-        USERID: ${USERID}
-    - id: contentadmin
-      display-name: All Content
-      description: View content from all sites.
-      container-image: shinystudio_rshiny_rstudio
-      container-network: shinystudio-net
-      container-volumes:
-        - "${MOUNTPOINT}:/srv/shiny-server:z"
-        - "${MOUNTPOINT}/${DESTSITE}/.log/#{proxy.userId}:/var/log/shiny-server:z"
-        - 'shinystudio_r_libraries:/r-libs'
-        - 'shinystudio_py_environment:/pyenv'
-        - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
-      access-groups: [ 'superadmins' ]
+      access-groups: [ 'superadmins', 'admins', 'readers' ]
       container-env:
         USER: "#{proxy.userId}"
         USERID: ${USERID}
     - id: rstudio
       display-name: RStudio
-      description: Create interactive apps and docs RStudio.
-      container-image: shinystudio_rshiny_rstudio
+      logo-url: 'fab fa-r-project'
+      container-image: shinystudio_rstudio_rshiny_vscode
       container-cmd: ["/start.sh", "rstudio"]
       container-network: shinystudio-net
       container-volumes:
-        - "${MOUNTPOINT}/${DESTSITE}:/home/#{proxy.userId}/__ShinyStudio__:z"
-        - "${MOUNTPOINT}/.rstudio/#{proxy.userId}/user-settings:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z"
-        - "${MOUNTPOINT}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
+        - "${MOUNTPOINT}/content/sites/${DESTSITE}:/home/#{proxy.userId}/__ShinyStudio__:z"
+        - "${MOUNTPOINT}/settings/rstudio/#{proxy.userId}/user-settings:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z"
+        - "${MOUNTPOINT}/content/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
+        - "${MOUNTPOINT}/logs/${DESTSITE}:/var/log/shiny-server:z"
         - 'shinystudio_r_libraries:/r-libs'
         - 'shinystudio_py_environment:/pyenv'
         - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
       container-env:
         USER: "#{proxy.userId}"
         USERID: ${USERID}
+      description: Full Screen
       port: 8787
       access-groups: [ 'admins' ]
-    - id: rstudioadmin
+    - id: superrstudio
       display-name: RStudio
-      description: Create interactive apps and docs RStudio (all content).
-      container-image: shinystudio_rshiny_rstudio
+      logo-url: 'fab fa-r-project'
+      container-image: shinystudio_rstudio_rshiny_vscode
       container-cmd: ["/start.sh", "rstudio"]
+      container-network: shinystudio-net
+      container-volumes:
+        - "${MOUNTPOINT}/content:/home/#{proxy.userId}/__ShinyStudio__:z"
+        - '${MOUNTPOINT}/settings/rstudio/#{proxy.userId}/user-settings:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z'
+        - "${MOUNTPOINT}/content/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
+        - "${MOUNTPOINT}/logs:/var/log/shiny-server:z"
+        - 'shinystudio_r_libraries:/r-libs'
+        - 'shinystudio_py_environment:/pyenv'
+        - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
+      container-env:
+        USER: "#{proxy.userId}"
+        USERID: ${USERID}
+      description: Full Screen
+      port: 8787
+      access-groups: [ 'superadmins' ]
+    - id: vscode
+      display-name: Visual Studio Code
+      logo-url: 'fas fa-terminal'
+      container-image: shinystudio_rstudio_rshiny_vscode
+      container-cmd: ["/start.sh", "vscode"]
+      container-network: shinystudio-net
+      container-volumes:
+        - "${MOUNTPOINT}/content/sites/${DESTSITE}:/home/#{proxy.userId}/__ShinyStudio__:z"
+        - "${MOUNTPOINT}/content/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
+        - 'shinystudio_r_libraries:/r-libs'
+        - 'shinystudio_py_environment:/pyenv'
+        - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
+        - '${MOUNTPOINT}/settings/vscode/#{proxy.userId}:/home/#{proxy.userId}/.local/share/code-server:z'
+      container-env:
+        USER: "#{proxy.userId}"
+        USERID: ${USERID}
+      description: Full Screen
+      port: 8443
+      access-groups: [ 'admins' ]
+    - id: supervscode
+      display-name: Visual Studio Code
+      logo-url: 'fas fa-terminal'
+      container-image: shinystudio_rstudio_rshiny_vscode
+      container-cmd: ["/start.sh", "vscode"]
       container-network: shinystudio-net
       container-volumes:
         - "${MOUNTPOINT}:/home/#{proxy.userId}/__ShinyStudio__:z"
-        - '${MOUNTPOINT}/.rstudio/#{proxy.userId}/user-settings:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z'
-        - "${MOUNTPOINT}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
+        - "${MOUNTPOINT}/content/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
         - 'shinystudio_r_libraries:/r-libs'
         - 'shinystudio_py_environment:/pyenv'
         - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
+        - '${MOUNTPOINT}/settings/vscode/#{proxy.userId}:/home/#{proxy.userId}/.local/share/code-server:z'
       container-env:
         USER: "#{proxy.userId}"
         USERID: ${USERID}
-      port: 8787
+      description: Full Screen
+      port: 8443
       access-groups: [ 'superadmins' ]

@@ -1,0 +1,25 @@
+{
+    "Print to console": {
+        "prefix": "FrontMatter",
+        "body": [
+            "---",
+            "title: ''",
+            "subtitle: ''",
+            "abstract: |",
+                "    A fancy doc.",
+            "output:",
+            "  html_document:",
+                "    fig_caption: no",
+                "    theme: 'spacelab'",
+                "    highlight: 'haddock'",
+                "    keep_md: yes",
+                "    toc: yes",
+                "    toc_depth: 3",
+                "    toc_float:",
+                "      collapsed: no",
+                "      smooth_scroll: yes",
+            "---\n"
+        ],
+        "description": "Sample front matter for RMarkdown documents."
+    }
+}

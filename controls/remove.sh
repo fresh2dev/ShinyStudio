@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-read -p "Permanently remove all images & containers?" -n 1 -r
+read -p "Permanently remove all ShinyStudio images & containers?" -n 1 -r
 
 if [[ $REPLY =~ ^[Yy]$ ]]
 then

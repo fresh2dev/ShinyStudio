@@ -223,14 +223,14 @@ The files below are worth examining if you want to customize the stack.
 ./ShinyStudio/controls                         <-- contains scripts for setup, restart, stop, etc.
 ./ShinyStudio/controls/content                 <-- contains initial content for a new site.
 ./ShinyStudio/docker-compose.yml               <-- defines how to run and build the various docker images.
-./ShinyStudio/rshiny_rstudio/Dockerfile        <-- defines how to build / what to include in shiny/rstudio image
-./ShinyStudio/rshiny_rstudio/config/odbc       <-- contains odbc config files to build into the image.
-./ShinyStudio/rshiny_rstudio/config/start.sh   <-- performs actions before each launch, then starts shiny/rstudio.
+./ShinyStudio/rstudio_rshiny_vscode/Dockerfile        <-- defines how to build / what to include in shiny/rstudio image
+./ShinyStudio/rstudio_rshiny_vscode/config/odbc       <-- contains odbc config files to build into the image.
+./ShinyStudio/rstudio_rshiny_vscode/config/start.sh   <-- performs actions before each launch, then starts shiny/rstudio.
 ./ShinyStudio/shinyproxy/Dockerfile            <-- defines how to build shinyproxy image.
 ./ShinyStudio/shinyproxy/config/sites          <-- contains site definitions.
 
 ./ShinyStudio/shinyproxy/config/templates/1col/index.html <-- 1 column layout HTML template.
-./ShinyStudio/shinyproxy/config/templates/2col/index.html <-- 2 column layout HTML template.
+./ShinyStudio/shinyproxy/config/templates/grid-layout/index.html <-- 2 column layout HTML template.
 ```
 
 ## Persistent Files
@@ -242,7 +242,7 @@ Within RStudio, the only content that persists is that which was saved to the "_
 While R packages persist between sessions, installed libraries and drivers do not. To have persistent drivers, they must be built into the Docker image that contains shiny/rstudio. The Dockerfile that defines what goes into the image is here:
 
 ```
-./ShinyStudio/rshiny_rstudio/Dockerfile    <-- defines how to build / what to include in shiny/rstudio image
+./ShinyStudio/rstudio_rshiny_vscode/Dockerfile    <-- defines how to build / what to include in shiny/rstudio image
 ```
 
 In this file is an example that installs Cloudera Impala ODBC drivers.
