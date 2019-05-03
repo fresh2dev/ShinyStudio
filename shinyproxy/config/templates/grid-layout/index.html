@@ -1,0 +1,105 @@
+<!--
+
+	ShinyProxy
+
+	Copyright (C) 2016-2018 Open Analytics
+
+	===========================================================================
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the Apache License as published by
+	The Apache Software Foundation, either version 2 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	Apache License for more details.
+
+	You should have received a copy of the Apache License
+	along with this program.  If not, see <http://www.apache.org/licenses/>
+
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head lang="en">
+	<title th:text="${title}"></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	<link rel="stylesheet" media="screen" th:href="@{${bootstrapCss}}" />
+	<link rel="stylesheet" media="screen" th:href="@{/css/default.css}"/>
+	<script th:src="@{${jqueryJs}}"></script>
+	<script th:src="@{${bootstrapJs}}"></script>
+
+	<style type="text/css">
+		body {
+			background-color: #333;
+			background-image: url(/assets/img/background.png);
+			background-repeat: no-repeat;
+			background-attachment: scroll;
+			background-position: top center;
+			color: rgb(202, 202, 202);
+		}
+
+		.navbar {
+			background-color: #000000;
+			border-color: 1px solid #000000;
+		}
+
+		.card-box {
+			border-radius: 2.5rem;
+			padding-bottom: 10px;
+			margin-top:25px;
+			background-color: #000000b0;
+			box-shadow:  1px 1px 5px 1px grey;
+		}
+
+		.portfolio-item {
+			/* height: 250px; */
+			text-align: center;
+		}
+
+		.row {
+			margin: 0px;
+		}
+
+		h3 {
+			margin: 10px;
+		}
+
+		.app_rstudio, .app_superrstudio {
+			margin-left: 15%;
+		}
+
+		.fa, .far, .fas, .fab {
+			font-size: 96px;
+			color: #55b0ff;
+			margin: 15px;
+		}
+	</style>
+</head>
+<body>
+	<div th:replace="../fragments/navbar :: navbar"></div>
+
+	<div class="container" id="applist">
+		<div class="row" >
+			<div th:each="app: ${apps}">
+				<div th:class="${'col-md-4 portfolio-item app_' + app.id}">
+					<div class="card-box">
+						<a th:href="@{/app/}+${app.id}">
+							<i th:class="${app.logoURL}"></i>
+						</a>
+						<h3>
+							<a th:href="@{/app/}+${app.id}" th:text="${app.displayName == null} ? ${app.id} : ${app.displayName}" style="color: #55b0ff;"></a>
+						</h3>
+						<a th:if="${app.description != null}" th:href="@{/app_direct/}+${app.id + '/'}" style="color: #55b0ff; font-style: italic;" target="_blank">
+							<p th:text="${app.description}"></p>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+--2019-05-01 06:04:29--  https://raw.githubusercontent.com/dm3ll3n/ShinyStudio/master/shinyproxy/config/templates/2col/assets/img/shinystudio.png
+Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.192.133, 151.101.128.133, 151.101.64.133, ...
+Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.192.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 83253 (81K) [image/png]
+Saving to: ‘shinystudio.png’
+
+     0K .......... .......... .......... .......... .......... 61% 88.5M 0s
+    50K .......... .......... .......... .                    100%  315M=0.001s
+
+2019-05-01 06:04:29 (122 MB/s) - ‘shinystudio.png’ saved [83253/83253]
+

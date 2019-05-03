@@ -3,9 +3,9 @@ proxy:
   ### PERSONALIZATION ###
   title: ShinyStudio:${SITEID}
   hide-navbar: false
-  logo-url: file:///opt/shinyproxy/templates/2col/assets/img/shinystudio.png
-  favicon-path: /opt/shinyproxy/templates/2col/assets/img/shinystudio.png
-  template-path: ./templates/2col # or [1-2]col
+  logo-url: file:///opt/shinyproxy/templates/grid-layout/assets/img/shinystudio.png
+  favicon-path: /opt/shinyproxy/templates/grid-layout/assets/img/shinystudio.png
+  template-path: ./templates/grid-layout # or [1-2]col
   ### AUTHENTICATION ###
   authentication: ldap
   admin-groups: ['superadmins', 'admins']
