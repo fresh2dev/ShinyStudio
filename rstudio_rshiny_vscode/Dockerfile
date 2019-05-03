@@ -71,6 +71,15 @@ RUN wget https://github.com/codercom/code-server/releases/download/1.939-vsc1.33
     mkdir -p /home/travis/build/codercom/code-server/packages/server/build/web && \
     echo '' > /home/travis/build/codercom/code-server/packages/server/build/web/index.html
 
+# install SQL Server odbc driver
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+    ACCEPT_EULA=Y apt-get install -y msodbcsql17 && \
+    ACCEPT_EULA=Y apt-get install -y mssql-tools
+
+# install PostgreSQL odbc driver
+RUN apt-get install -y odbc-postgresql
+
 # install cloudera odbc driver
 RUN wget https://downloads.cloudera.com/connectors/ClouderaImpala_ODBC_2.6.2.1002/Debian/clouderaimpalaodbc_2.6.2.1002-2_amd64.deb -O /tmp/clouderaimpalaodbc_amd64.deb && \
     dpkg -i /tmp/clouderaimpalaodbc_amd64.deb && \
