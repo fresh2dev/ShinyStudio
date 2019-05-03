@@ -87,7 +87,6 @@ proxy:
         - "${MOUNTPOINT}/content/sites/${DESTSITE}:/home/#{proxy.userId}/__ShinyStudio__:z"
         - "${MOUNTPOINT}/settings/rstudio/#{proxy.userId}/user-settings:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z"
         - "${MOUNTPOINT}/content/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
-        - "${MOUNTPOINT}/logs/${DESTSITE}:/var/log/shiny-server:z"
         - 'shinystudio_r_libraries:/r-libs'
         - 'shinystudio_py_environment:/pyenv'
         - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
@@ -107,7 +106,6 @@ proxy:
         - "${MOUNTPOINT}/content:/home/#{proxy.userId}/__ShinyStudio__:z"
         - '${MOUNTPOINT}/settings/rstudio/#{proxy.userId}/user-settings:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z'
         - "${MOUNTPOINT}/content/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
-        - "${MOUNTPOINT}/logs:/var/log/shiny-server:z"
         - 'shinystudio_r_libraries:/r-libs'
         - 'shinystudio_py_environment:/pyenv'
         - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'

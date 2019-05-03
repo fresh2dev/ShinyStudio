@@ -62,7 +62,7 @@ RUN wget https://github.com/codercom/code-server/releases/download/1.939-vsc1.33
     mkdir /code-server-template && \
     code-server --user-data-dir /code-server-template --install-extension ms-python.python && \
     code-server --user-data-dir /code-server-template --install-extension ms-vscode.powershell && \
-    code-server --user-data-dir /code-server-template --install-extension ms-mssql.mssql && \
+#     code-server --user-data-dir /code-server-template --install-extension ms-mssql.mssql && \
     code-server --user-data-dir /code-server-template --install-extension yzhang.markdown-all-in-one && \
     echo '#!/usr/bin/env bash' > '/setup_vscode.sh' && \
     echo 'cp -Rn /code-server-template/* ~/.local/share/code-server' >> '/setup_vscode.sh' && \
@@ -70,6 +70,9 @@ RUN wget https://github.com/codercom/code-server/releases/download/1.939-vsc1.33
     # unsure why this is necessary, but it solves a fatal 'file not found' error.
     mkdir -p /home/travis/build/codercom/code-server/packages/server/build/web && \
     echo '' > /home/travis/build/codercom/code-server/packages/server/build/web/index.html
+
+COPY config/vscode/User/settings.json /code-server-template/User/settings.json
+COPY config/vscode/User/snippets /code-server-template/User/snippets
 
 # install SQL Server odbc driver
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
