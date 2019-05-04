@@ -1,53 +1,64 @@
-ShinyStudio
-================
+-   [What is ShinyStudio?](#what-is-shinystudio)
+-   [How to get it](#how-to-get-it)
+    -   [Personal Branch](#personal-branch)
+-   [Access](#access)
+-   [Develop](#develop)
+    -   [Tools](#tools)
+-   [Content](#content)
+-   [Configuration](#configuration)
+    -   [Security](#security)
+    -   [Multiple Sites](#multiple-sites)
+-   [Customizing](#customizing)
+-   [Reinstalling](#reinstalling)
+-   [References](#references)
+-   [Contributing](#contributing)
 
 ![](https://i.imgur.com/rtd29qC.png)
 
 ![](https://i.imgur.com/FIzE0d7.png)
 
-- [What is ShinyStudio?](#what-is-shinystudio)
-- [How to get it](#how-to-get-it)
-- [Access](#access)
-- [Develop](#develop)
-  - [Tools](#tools)
-- [Content](#content)
-- [Configuration](#configuration)
-  - [Security](#security)
-  - [Multiple Sites](#multiple-sites)
-- [Customizing](#customizing)
-- [Reinstalling](#reinstalling)
-- [References](#references)
-- [Contributing](#contributing)
-
 What is ShinyStudio?
 --------------------
 
-> NOTE: v1.0.0 is a major overhaul that includes *many* changes that are not backwards compatible. If you are running an existing version, backup existing content and re-setup from scratch.
+> NOTE: v1.0.0 is a major overhaul that includes *many* changes that are
+> not backwards compatible. If you are running an existing version,
+> backup existing content and re-setup from scratch.
 
-The ShinyStudio project is an orchestration of Docker services with the goal of providing:
+The ShinyStudio project is an orchestration of Docker services with the
+goal of providing:
 
--   a collaborative, self-hosted development environment with a choice of IDE (RStudio or VS Code).
--   a centralized document repository, capable of displaying pre-rendered HTML, Markdown, or live, interactive RMarkdown documents.
+-   a collaborative, self-hosted development environment with a choice
+    of IDE (RStudio or VS Code).
+-   a centralized document repository, capable of displaying
+    pre-rendered HTML, Markdown, or live, interactive RMarkdown
+    documents.
 -   a secure method for sharing web apps developed with RStudio Shiny.
 
-The ShinyStudio ecosystem primarily consists of the products described below:
+The ShinyStudio ecosystem primarily consists of the products described
+below:
 
--   [ShinyProxy](https://www.shinyproxy.io/) (Reverse proxy & Docker manager)
+-   [ShinyProxy](https://www.shinyproxy.io/) (Reverse proxy & Docker
+    manager)
 -   [Shiny Server](https://shiny.rstudio.com/) (Web Server)
 -   [RStudio Server](https://www.rstudio.com/) (IDE)
--   [VS Code](https://code.visualstudio.com/), modified by [Coder.com](https://coder.com/) (IDE)
--   [Docker](https://www.docker.com/resources/what-container) (Containers)
+-   [VS Code](https://code.visualstudio.com/), modified by
+    [Coder.com](https://coder.com/) (IDE)
+-   [Docker](https://www.docker.com/resources/what-container)
+    (Containers)
 
 ![](https://i.imgur.com/ppQsjIx.png)
 
-> ShinyStudio is not a product; it is a project / ecosystem wholly composed of the above products. ShinyStudio is not affiliated with or supported by RStudio, Microsoft, or OpenAnalytics.
+> ShinyStudio is not a product; it is a project / ecosystem wholly
+> composed of the above products. ShinyStudio is not affiliated with or
+> supported by RStudio, Microsoft, or OpenAnalytics.
 
 How to get it
 -------------
 
 Prereqs:
 
--   [Docker](https://docs.docker.com/install/linux/docker-ce/debian/) / [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
+-   [Docker](https://docs.docker.com/install/linux/docker-ce/debian/) /
+    [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
 -   [Docker Compose](https://docs.docker.com/compose/install/)
 -   [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
@@ -66,20 +77,53 @@ cd ShinyStudio
 
 This operation can take a few minutes.
 
-Once complete, open a web browser and navigate to `http://localhost:8080`.
+Once complete, open a web browser and navigate to
+`http://localhost:8080`.
 
-The default logins are: \* `user`: `user` \* `admin`: `admin` \* `superadmin`: `superadmin`
+The default logins are: \* `user`: `user` \* `admin`: `admin` \*
+`superadmin`: `superadmin`
+
+### Personal Branch
+
+A “personal” branch of ShinyStudio exists. It’s configuration differs in
+a few key ways:
+
+-   ShinyProxy only listens on the loopback interface (`127.0.0.1`)
+-   The site is hosted on port `12345`.
+-   All users are admins.
+-   Any local user can log in with default password `changeme`.
+
+The setup slightly differs:
+
+``` text
+# Clone this repository.
+git clone https://github.com/dm3ll3n/ShinyStudio -b personal
+
+# Enter the new directory.
+cd ShinyStudio
+
+# Setup and run.
+./control.sh setup "${HOME}/shinystudio"
+```
+
+The last argument to `control.sh` specifies the directory where content
+and settings will be stored.
 
 Access
 ------
 
-Authentication is managed by ShinyProxy, which supports basic auth, LDAP, Kerberos, and others ([read more](https://www.shinyproxy.io/configuration/)).
+Authentication is managed by ShinyProxy, which supports basic auth,
+LDAP, Kerberos, and others ([read
+more](https://www.shinyproxy.io/configuration/)).
 
 ShinyStudio defines three levels of access:
 
--   readers: can only view content from "Apps & Reports", "Documents", and "Personal".
--   admins: can view all site content and develop content with RStudio and VS Code.
--   superadmins: can view and develop site content across multiple instances of ShinyStudio.
+-   readers: can only view content from “Apps & Reports”, “Documents”,
+    and “Personal”.
+-   admins: can view all site content and develop content with RStudio
+    and VS Code.
+-   superadmins: can view and develop site content across multiple
+    instances of ShinyStudio.
 
 Admin/Superadmin landing page:
 
@@ -99,21 +143,24 @@ Open your IDE of choice and notice two important directories:
 
 ![](https://i.imgur.com/ac7iKDH.png)
 
-**Files must be saved in either of these two directories in order to persist between sessions.**
+**Files must be saved in either of these two directories in order to
+persist between sessions.**
 
-These two folders are shared between instances RStudio, VS Code, and Shiny Server. So, creating new content is as simple as saving a file to the appropriate directory.
+These two folders are shared between instances RStudio, VS Code, and
+Shiny Server. So, creating new content is as simple as saving a file to
+the appropriate directory.
 
 ![](https://i.imgur.com/lAuTMgB.png)
 
 ### Tools
 
-The ShinyStudio ecosystem comes with...
+The ShinyStudio ecosystem comes with…
 
 -   R
 -   Python
 -   PowerShell
 
-...and ODBC drivers for:
+…and ODBC drivers for:
 
 -   SQL Server
 -   PostgresSQL
@@ -123,7 +170,8 @@ These are persistent because they are built into the image.
 
 Apps / drivers installed through RStudio/VS Code will *not* persist.
 
-Libraries for R, Python, and PowerShell *will* persist. Additionally, user workspace settings (e.g. themes) are persistent.
+Libraries for R, Python, and PowerShell *will* persist. Additionally,
+user workspace settings (e.g. themes) are persistent.
 
 Content
 -------
@@ -134,14 +182,17 @@ All persisted content is stored locally on the host system at:
 /srv/shinystudio
 ```
 
-To store files in another directory, edit the `MOUNTPOINT` variable in `control.sh`.
+To store files in another directory, edit the `MOUNTPOINT` variable in
+`control.sh`.
 
 Configuration
 -------------
 
 ### Security
 
-To apply a custom security configuration, modify the ShinyProxy configuration file for the site. All available options are detailed [here](https://www.shinyproxy.io/configuration/).
+To apply a custom security configuration, modify the ShinyProxy
+configuration file for the site. All available options are detailed
+[here](https://www.shinyproxy.io/configuration/).
 
 ``` text
 ./shinyproxy/config/sites/8080.yml
@@ -163,7 +214,8 @@ users:
     groups: readers
 ```
 
-After modifying any part of the configuration, stop and re-setup the site with:
+After modifying any part of the configuration, stop and re-setup the
+site with:
 
 ``` bash
 ./control.sh setup
@@ -171,9 +223,11 @@ After modifying any part of the configuration, stop and re-setup the site with:
 
 ### Multiple Sites
 
-Multiple sites can be useful to segment content or provide unique customizations.
+Multiple sites can be useful to segment content or provide unique
+customizations.
 
-The configs below will setup two unique, independent instances of ShinyStudio, hosted on ports 8080, 8081.
+The configs below will setup two unique, independent instances of
+ShinyStudio, hosted on ports 8080, 8081.
 
 ``` text
 ./shinyproxy/config/sites/8080.yml
@@ -184,7 +238,10 @@ The configs below will setup two unique, independent instances of ShinyStudio, h
 
 #### Shared Content
 
-It is possible to have multiple sites with independent configurations have access to the same content. To do this, name the file `PORT_SITE.yml`, where `PORT` is the port to broadcast on, and `SITE` is the port number of the site that already has content.
+It is possible to have multiple sites with independent configurations
+have access to the same content. To do this, name the file
+`PORT_SITE.yml`, where `PORT` is the port to broadcast on, and `SITE` is
+the port number of the site that already has content.
 
 ``` text
 ./shinyproxy/config/sites/8080.yml
@@ -202,7 +259,8 @@ To customize the landing page, edit:
 ./shinyproxy/config/templates/grid-layout/index.html
 ```
 
-To simply replace the background, replace the file below with the background desired background:
+To simply replace the background, replace the file below with the
+background desired background:
 
 ``` text
 ./shinyproxy/config/templates/grid-layout/assets/img/background.png
@@ -213,7 +271,8 @@ To simply replace the background, replace the file below with the background des
 Reinstalling
 ------------
 
-> Site content is never removed by any of the provided control scripts; you must do this manually, if desired.
+> Site content is never removed by any of the provided control scripts;
+> you must do this manually, if desired.
 
 To thoroughly remove and reinstall ShinyStudio:
 
@@ -231,14 +290,15 @@ docker volume prune
 ./control.sh setup
 ```
 
-By removing existing images, the setup will pull the latest versions of the base Docker image for RStudio/Shiny.
+By removing existing images, the setup will pull the latest versions of
+the base Docker image for RStudio/Shiny.
 
 References
 ----------
 
--   <https://www.shinyproxy.io/>
--   <https://telethonkids.wordpress.com/2019/02/08/deploying-an-r-shiny-app-with-docker/>
--   <https://appsilon.com/alternatives-to-scaling-shiny>
+-   <a href="https://www.shinyproxy.io/" class="uri">https://www.shinyproxy.io/</a>
+-   <a href="https://telethonkids.wordpress.com/2019/02/08/deploying-an-r-shiny-app-with-docker/" class="uri">https://telethonkids.wordpress.com/2019/02/08/deploying-an-r-shiny-app-with-docker/</a>
+-   <a href="https://appsilon.com/alternatives-to-scaling-shiny" class="uri">https://appsilon.com/alternatives-to-scaling-shiny</a>
 
 Contributing
 ------------

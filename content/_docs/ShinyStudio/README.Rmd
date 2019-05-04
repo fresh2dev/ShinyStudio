@@ -12,25 +12,15 @@ output:
     toc_float:
       collapsed: no
       smooth_scroll: yes
+  md_document:
+    variant: markdown_github 
+    toc: true
+    toc_depth: 3
 ---
 
 ![](https://i.imgur.com/rtd29qC.png)
 
 ![](https://i.imgur.com/FIzE0d7.png)
-
-- [What is ShinyStudio?](#what-is-shinystudio)
-- [How to get it](#how-to-get-it)
-- [Access](#access)
-- [Develop](#develop)
-  - [Tools](#tools)
-- [Content](#content)
-- [Configuration](#configuration)
-  - [Security](#security)
-  - [Multiple Sites](#multiple-sites)
-- [Customizing](#customizing)
-- [Reinstalling](#reinstalling)
-- [References](#references)
-- [Contributing](#contributing)
 
 ## What is ShinyStudio?
 
@@ -84,6 +74,30 @@ The default logins are:
   * `user`: `user`
   * `admin`: `admin`
   * `superadmin`: `superadmin`
+
+### Personal Branch
+
+A "personal" branch of ShinyStudio exists. It's configuration differs in a few key ways:
+
+* ShinyProxy only listens on the loopback interface (`127.0.0.1`)
+* The site is hosted on port `12345`.
+* All users are admins.
+* Any local user can log in with default password `changeme`.
+
+The setup slightly differs:
+
+```text
+# Clone this repository.
+git clone https://github.com/dm3ll3n/ShinyStudio -b personal
+
+# Enter the new directory.
+cd ShinyStudio
+
+# Setup and run.
+./control.sh setup "${HOME}/shinystudio"
+```
+
+The last argument to `control.sh` specifies the directory where content and settings will be stored.
 
 ## Access
 
