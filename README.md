@@ -80,8 +80,11 @@ This operation can take a few minutes.
 Once complete, open a web browser and navigate to
 `http://localhost:8080`.
 
-The default logins are: \* `user`: `user` \* `admin`: `admin` \*
-`superadmin`: `superadmin`
+The default logins are:
+
+-   `user`: `user`
+-   `admin`: `admin`
+-   `superadmin`: `superadmin`
 
 ### Personal Branch
 
