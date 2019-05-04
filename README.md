@@ -14,7 +14,8 @@ ShinyStudio
 - [Configuration](#configuration)
   - [Security](#security)
   - [Multiple Sites](#multiple-sites)
-- [Reinstalling ShinyStudio](#reinstalling-shinystudio)
+- [Customizing](#customizing)
+- [Reinstalling](#reinstalling)
 - [References](#references)
 - [Contributing](#contributing)
 
@@ -192,8 +193,25 @@ It is possible to have multiple sites with independent configurations have acces
 
 ![](https://i.imgur.com/lgKdx93.png)
 
-Reinstalling ShinyStudio
-------------------------
+Customizing
+-----------
+
+To customize the landing page, edit:
+
+``` text
+./shinyproxy/config/templates/grid-layout/index.html
+```
+
+To simply replace the background, replace the file below with the background desired background:
+
+``` text
+./shinyproxy/config/templates/grid-layout/assets/img/background.png
+```
+
+![](https://i.imgur.com/Tl16HGv.png)
+
+Reinstalling
+------------
 
 > Site content is never removed by any of the provided control scripts; you must do this manually, if desired.
 

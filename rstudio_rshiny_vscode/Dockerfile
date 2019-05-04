@@ -4,9 +4,6 @@ FROM rocker/verse:latest
 ENV DISABLE_AUTH true
 ENV R_LIBS_USER /r-libs
 ENV APPLICATION_LOGS_TO_STDOUT false
-# reduce time spent waiting for libs to compile.
-# http://www.rexamine.com/2015/07/speeding-up-r-package-installation-process/
-# ENV MAKE 'make -j 8'
 
 # add shiny immediately and expose port 3838.
 RUN export ADD=shiny && bash /etc/cont-init.d/add
@@ -103,8 +100,5 @@ COPY config/shiny/shiny-server.conf /etc/shiny-server/shiny-server.conf
 # copy custom start command and make it executable.
 COPY config/start.sh /start.sh
 RUN chmod +x /start.sh
-
-# reset MAKE
-# ENV MAKE 'make'
 
 CMD [ "/start.sh" ]

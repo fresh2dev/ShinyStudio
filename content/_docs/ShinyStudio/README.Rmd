@@ -1,12 +1,12 @@
 ---
 title: "ShinyStudio"
-subtitle: 'A Docker stack of RStudio, Shiny Server, and ShinyProxy'
+subtitle: 'A Docker stack of RStudio, VS Code, and Shiny Server; driven by ShinyProxy.'
 output:
   html_document:
+    self_contained: true
     fig_caption: no
     theme: 'spacelab'
     highlight: 'haddock'
-    keep_md: yes
     toc: yes
     toc_depth: 3
     toc_float:
@@ -17,6 +17,20 @@ output:
 ![](https://i.imgur.com/rtd29qC.png)
 
 ![](https://i.imgur.com/FIzE0d7.png)
+
+- [What is ShinyStudio?](#what-is-shinystudio)
+- [How to get it](#how-to-get-it)
+- [Access](#access)
+- [Develop](#develop)
+  - [Tools](#tools)
+- [Content](#content)
+- [Configuration](#configuration)
+  - [Security](#security)
+  - [Multiple Sites](#multiple-sites)
+- [Customizing](#customizing)
+- [Reinstalling](#reinstalling)
+- [References](#references)
+- [Contributing](#contributing)
 
 ## What is ShinyStudio?
 
@@ -191,7 +205,23 @@ It is possible to have multiple sites with independent configurations have acces
 
 ![](https://i.imgur.com/lgKdx93.png)
 
-## Reinstalling ShinyStudio
+## Customizing
+
+To customize the landing page, edit:
+
+```text
+./shinyproxy/config/templates/grid-layout/index.html
+```
+
+To simply replace the background, replace the file below with the background desired background:
+
+```text
+./shinyproxy/config/templates/grid-layout/assets/img/background.png
+```
+
+![](https://i.imgur.com/Tl16HGv.png)
+
+## Reinstalling
 
 > Site content is never removed by any of the provided control scripts; you must do this manually, if desired.
 

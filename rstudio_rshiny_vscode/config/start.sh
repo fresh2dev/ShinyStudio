@@ -40,15 +40,7 @@ fi
 
 find /etc/services.d/* -type d -not -name "$svc" | xargs rm -rf
 
-# if [ "$1" != "rstudio" ]; then
-# 	# don't load rstudio; load shiny.
-# 	sudo rm -rf /etc/services.d/rstudio
-# else
-# 	# don't load shiny; load rstudio.
-# 	sudo rm -rf /etc/services.d/shiny-server
-# fi
-
-# own necessary folders
-chown -R $USERID:$USERID "/home/${USER}" # /vscode-data
+# fix permissions
+# chown -R $USERID:$USERID "/home/${USER}"
 
 /init

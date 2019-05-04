@@ -3,6 +3,7 @@ title: "The Languages of RStudio"
 subtitle: 'A few of many'
 output:
   html_document:
+    self_contained: true
     fig_caption: no
     theme: 'spacelab'
     toc: yes
