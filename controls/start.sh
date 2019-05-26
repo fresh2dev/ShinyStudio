@@ -1,20 +1,23 @@
 #!/usr/bin/env bash
 
-for site_config in ./shinyproxy/config/sites/*.yml; do
-	[ -e "$site_config" ] || continue
+for SITECONFIG in ./sites/*.yml; do
+    [ -e "$SITECONFIG" ] || continue
 
-	SITEID=$(basename "$site_config" .yml)
-	SITEPORT=$(echo $SITEID | cut -d '_' -f1)
-	DESTSITE=$(echo $SITEID | cut -d '_' -f2)
+    BASENAME=$(basename "$SITECONFIG" .yml)
+    SITEPORT=$(echo $BASENAME | cut -d '_' -f1)
+    SITEID=$(echo $BASENAME | cut -d '_' -f2)
 
-	SITEDIR="${MOUNTPOINT}/content/sites/${DESTSITE}"
+    if [ -z "$SITEID" ]; then
+        SITEID=$SITEPORT
+    fi
 
-	echo "*** Starting"
+    #export SITECONFIG
 
-	if [ ! -d "$SITEDIR" ]; then
-		mkdir -p "$SITEDIR"
-		cp -RT "./content" "$SITEDIR"
-	fi
-
-	docker-compose run -d --service-ports -e SITEID=$SITEID -e DESTSITE=$DESTSITE -e MOUNTPOINT="$MOUNTPOINT" shinyproxy
+    docker-compose run --name "shinyproxy_${SITEPORT}" -d \
+        -p $SITEPORT:8080 \
+        -e SITECONFIG=$SITECONFIG \
+        -e SITEID=$SITEID \
+        -e USER=$USER \
+        -e USERID=$USERID \
+        shinystudio
 done

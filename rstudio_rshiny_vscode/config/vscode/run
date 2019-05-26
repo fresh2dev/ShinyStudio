@@ -1,2 +1,0 @@
-#!/usr/bin/with-contenv bash
-su - $USER -c 'cd ~ && export SHELL=/bin/bash && /usr/local/bin/code-server --allow-http --no-auth --disable-telemetry'

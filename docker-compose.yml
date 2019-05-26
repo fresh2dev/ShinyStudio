@@ -1,71 +1,47 @@
 version: '3.5'
 
 services:
-  shinyproxy:
+  shinystudio:
     build:
-      context: ./shinyproxy
+      context: .
       dockerfile: Dockerfile
-    restart: 'always'
+    restart: always
     depends_on:
       - influxdb
     networks:
       - shinystudio-net
-    environment:
-      - APPLICATION_LOGS_TO_STDOUT=false
-      - USERID=${USERID}
-      - USER=${USER}
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
-    ports:
-      - "${SITEPORT}:8080"
+      - './configs/odbc/odbcinst.ini:/etc/odbcinst.ini:z'
+      - './configs/odbc/odbc.ini:/etc/odbc.ini:z'
+      - './configs/vscode/User/settings.json:/code-server-template/User/settings.json:z'
+      - './configs/vscode/User/snippets:/code-server-template/User/snippets:z'
+      - './configs/shinyproxy/background.png:/opt/shinyproxy/templates/grid-layout/assets/img/background.png:z'
+      - "${SITECONFIG}:/opt/shinyproxy/application.yml:z"
+    environment:
+      - APPLICATION_LOGS_TO_STDOUT=false
+      - MOUNTPOINT=${MOUNTPOINT}
 
   influxdb:
-    build:
-      context: ./influxdb
-      dockerfile: Dockerfile
-    restart: 'always'
+    image: influxdb
+    container_name: shinystudio_influxdb
+    restart: always
     networks:
       - shinystudio-net
     ports:
-      - "8886:8086"
+      - 8086:8086
     volumes:
+      - './configs/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:z'
       - 'influxdb_data:/var/lib/influxdb'
     environment:
-      INFLUXDB_DB: 'shinyproxy_usagestats'
-      INFLUXDB_ADMIN_ENABLED: 'true'
-      INFLUXDB_ADMIN_USER: 'admin'
-      INFLUXDB_ADMIN_PASSWORD: 'hLUCoz0gtymi'
-
-  rstudio_rshiny_vscode:
-    build:
-      context: ./rstudio_rshiny_vscode
-      dockerfile: Dockerfile
-    restart: 'no'
-    networks:
-      - shinystudio-net
-    ports:
-      - '8787:8787'
-      - '8888:8888'
-      - '3838:3838'
-      - '8443:8443'
-    volumes:
-      - "${MOUNTPOINT}/content/sites/${DESTSITE}:/home/${USER}/__ShinyStudio__:z"
-      - "${MOUNTPOINT}/content/users/${USER}:/home/${USER}/__Personal__:z"
-      - "${MOUNTPOINT}/logs/${DESTSITE}/${USER}:/var/log/shiny-server:z"
-      - "${MOUNTPOINT}/settings/rstudio/${USER}/user-settings:/home/${USER}/.rstudio/monitored/user-settings:z"
-      - "${MOUNTPOINT}/settings/vscode/${USER}:/home/${USER}/.local/share/code-server/User:z"
-      - 'r_libraries:/r-libs'
-      - 'py_environment:/pyenv'
-      - "pwsh_modules:/home/${USER}/.local/share/powershell/Modules"
-    environment:
-      - USER=${USER}
-      - USERID=${USERID}
+      - INFLUXDB_DB=shinyproxy_usagestats
+      - INFLUXDB_ADMIN_ENABLED=true
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=hLUCoz0gtymi
+      - INFLUXDB_REPORTING_DISABLED=true
 
 volumes:
   influxdb_data:
-  r_libraries:
-  py_environment:
-  pwsh_modules:
 
 networks:
   shinystudio-net:
