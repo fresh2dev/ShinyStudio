@@ -11,6 +11,7 @@ if [ ! -f "${op_script}" ]; then
 Supported operations:
 
 - setup
+- update
 - start
 - stop
 - restart
