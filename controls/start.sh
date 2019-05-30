@@ -5,7 +5,7 @@ for SITECONFIG in ./sites/*.yml; do
 
     BASENAME=$(basename "$SITECONFIG" .yml)
     SITEPORT=$(echo $BASENAME | cut -d '_' -f1)
-    SITEID=$(echo $BASENAME | cut -d '_' -f2)
+    SITEID=$(echo $BASENAME | cut -d '_' -f2,3,4,5)
 
     if [ -z "$SITEID" ]; then
         SITEID=$SITEPORT
