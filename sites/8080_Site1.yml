@@ -110,6 +110,7 @@ proxy:
       container-env:
         USER: "#{proxy.userId}"
         USERID: ${USERID}
+        SITEID: ${SITEID}
       description: Full Screen
       port: 8787
       access-groups: [ 'superadmins' ]
@@ -148,6 +149,7 @@ proxy:
       container-env:
         USER: "#{proxy.userId}"
         USERID: ${USERID}
+        SITEID: ${SITEID}
       description: Full Screen
       port: 8443
       access-groups: [ 'superadmins' ]
