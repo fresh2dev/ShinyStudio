@@ -12,10 +12,6 @@ services:
       - shinystudio-net
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
-      - './configs/odbc/odbcinst.ini:/etc/odbcinst.ini:z'
-      - './configs/odbc/odbc.ini:/etc/odbc.ini:z'
-      - './configs/vscode/User/settings.json:/code-server-template/User/settings.json:z'
-      - './configs/vscode/User/snippets:/code-server-template/User/snippets:z'
       - './configs/shinyproxy/background.png:/opt/shinyproxy/templates/grid-layout/assets/img/background.png:z'
       - './configs/shinyproxy/logo.png:/opt/shinyproxy/templates/grid-layout/assets/img/logo.png:z'
       - "${SITECONFIG}:/opt/shinyproxy/application.yml:z"
