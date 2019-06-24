@@ -1,13 +1,6 @@
 # SOCIAL AUTH
+
 proxy:
-  ### PERSONALIZATION ###
-  title: "ShinyStudio: ${SITEID}"
-  hide-navbar: false
-  logo-url: file:///opt/shinyproxy/templates/grid-layout/assets/img/shinystudio.png
-  favicon-path: /opt/shinyproxy/templates/grid-layout/assets/img/shinystudio.png
-  template-path: ./templates/grid-layout
-  ### AUTHENTICATION ###
-  authentication: social
   social:
     facebook:
       app-id: yourfacebookappid
@@ -24,25 +17,3 @@ proxy:
     linkedin:
       app-id: yourlinkedinappid
       app-secret: yourlinkedinappsecret
-  users:
-  - name: superadmin
-    password: superadmin
-    groups: superadmins
-  - name: admin
-    password: admin
-    groups: admins
-  - name: user
-    password: user
-    groups: readers
-  ### DANGER ZONE ###
-  port: 8080 # don't change!
-  landing-page: /
-  heartbeat-rate: 15000
-  heartbeat-timeout: 120000
-  usage-stats-url: http://influxdb:8086/write?db=shinyproxy_usagestats
-  usage-stats-username: 'admin'
-  usage-stats-password: 'hLUCoz0gtymi'
-  docker:
-    internal-networking: true
-  specs:
-    ...
