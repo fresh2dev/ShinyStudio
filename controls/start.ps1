@@ -1,5 +1,5 @@
 Get-ChildItem ".\sites\*.yml" | ForEach-Object {
-    [sttring]$env:SITECONFIG = $_.FullName | Resolve-Path -Relative
+    [string]$env:SITECONFIG = $_.FullName | Resolve-Path -Relative
 
     [string[]]$tmp = $_.BaseName.Split('_', 2)
     [uint16]$env:SITEPORT = $tmp[0]
