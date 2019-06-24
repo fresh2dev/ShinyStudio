@@ -6,7 +6,7 @@ op_script="./controls/$1.sh"
 
 if [ ! -f "${op_script}" ]; then
     echo "
-./control.sh <operation>
+./control.sh <operation> [<mountpoint>]
 
 Supported operations:
 

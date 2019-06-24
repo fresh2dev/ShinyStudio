@@ -13,7 +13,7 @@ for SITECONFIG in ./sites/*.yml; do
 
     docker-compose run --name "shinyproxy_${SITEPORT}" -d \
         -p $SITEPORT:8080 \
-        -e SITECONFIG=$SITECONFIG \
+        -e SITECONFIG="$SITECONFIG" \
         -e SITEID=$SITEID \
         -e USER=$USER \
         -e USERID=$USERID \
