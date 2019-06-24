@@ -22,6 +22,7 @@ proxy:
   ### DANGER ZONE ###
   port: 8080 # don't change!
   landing-page: /
+  container-wait-time: 30000
   heartbeat-rate: 15000
   heartbeat-timeout: 120000
   usage-stats-url: http://influxdb:8086/write?db=shinyproxy_usagestats
