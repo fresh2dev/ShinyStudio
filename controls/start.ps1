@@ -21,6 +21,7 @@ Get-ChildItem ".\sites\*.yml" | ForEach-Object {
         -p "$($env:SITEPORT):8080" `
         -e SITECONFIG="$env:SITECONFIG" `
         -e SITEID=$env:SITEID `
+        -e MOUNTPOINT="$env:MOUNTPOINT" `
         -e USER=$env:USER `
         -e USERID=$env:USERID `
         myshinystudio

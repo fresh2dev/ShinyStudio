@@ -15,6 +15,7 @@ for SITECONFIG in ./sites/*.yml; do
         -p $SITEPORT:8080 \
         -e SITECONFIG="$SITECONFIG" \
         -e SITEID=$SITEID \
+        -e MOUNTPOINT="$MOUNTPOINT" \
         -e USER=$USER \
         -e USERID=$USERID \
         myshinystudio
