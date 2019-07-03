@@ -1,14 +1,17 @@
 param(
-    [ValidateSet('start', 'stop', 'restart', 'setup', 'up', 'down')]
+    [ValidateSet('create', 'new', 'start', 'stop', 'restart', 'setup', 'up', 'down', 'remove', 'rm', 'list', 'ls')]
     [string]$op,
-    [string]$InstanceID,
-    [string]$Mountpoint
+    [string]$SitePort = '*',
+    [string]$ContentPath = $(Join-Path $PWD 'content')
 )
 
 [hashtable]$op_translate = @{
-    'up'='start';
-    'down'='stop';
-    'setup'='restart'
+    'new'   = 'create';
+    'up'    = 'start';
+    'down'  = 'stop';
+    'setup' = 'restart';
+    'ls'    = 'list';
+    'rm'    = 'remove';
 }
 
 if ($op_translate.Keys -contains $op) {
@@ -20,35 +23,47 @@ if ($op_translate.Keys -contains $op) {
 if (-not (Test-Path $op_script))
 {
     Write-Host "
-./control.ps1 <operation> [<instance id>] [<mountpoint>]
+./control.ps1 <operation> [<site port>] [<content path>]
 
 Supported operations:
 
-- start
-- stop
-- restart
+- start   (or 'up')
+- stop    (or 'down')
+- restart (or 'setup')
+- create  (or 'new')
+- list    (or 'ls')
 
 Example:
 
-./control.ps1 setup
+# create and start site on port 8080.
+./control.ps1 start 8080
 
+# create config for port 8081; don't start.
+./control.ps1 create 8081
 
+# list all.
+./control.ps1 ls
+
+# stop all.
+./control.ps1 stop
+
+# start all.
+./control.ps1 start
 "
 }
 else
 {
-    if (-not $Mountpoint) {
-        $Mountpoint = Join-Path $PWD 'content'
+    [hashtable]$params = @{
+        'SitePort'=$SitePort
     }
 
-    $env:INSTANCEID = $InstanceID
+    if (@('start', 'restart') -contains $op) {
+        if (-not $ContentPath) {
+            $ContentPath = Join-Path $PWD 'content'
+        }
 
-    $env:MOUNTPOINT = $Mountpoint
-    $env:USER = $env:USERNAME
-    $env:USERID = 1000
-    $env:SITECONFIG = ""
-    $env:SITEID = 0
-    $env:SSLPORT = Get-Random -Minimum 50000 -Maximum 60000
+        $params.Add('ContentPath', $ContentPath)
+    }
 
-    . $op_script
+    . $op_script @params
 }

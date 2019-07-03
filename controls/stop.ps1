@@ -1,23 +1,27 @@
-# if (-not $env:INSTANCEID) {
-#     docker.exe stop $(docker.exe ps --filter "NETWORK=shinystudio" -a -q)
-#     docker.exe rm -f $(docker.exe ps --filter="NETWORK=shinystudio" -aq)
-# }
+param(
+    [Parameter(Mandatory=$true)]
+    [string]$SitePort
+)
 
-Get-ChildItem ".\sites\$env:INSTANCEID*.yml" | ForEach-Object {
-    [string]$env:SITECONFIG = $_.FullName | Resolve-Path -Relative
+Get-ChildItem 'configs' -Filter "$SitePort" -Directory |
+Where-Object { $_.BaseName -match '^\d+$' } |
+ForEach-Object {
 
-    [uint16]$env:SITEPORT, [string]$env:SITEID = $_.BaseName.Split('_', 2)
+    [string]$project_name = "shinystudio_$($_.BaseName)"
 
-    Write-Host "*** Stopping $($_.BaseName)"
+    Write-Host "*** Stopping $project_name"
 
-    if (-not $env:SITEID) {
-        $env:SITEID=$env:SITEPORT
-    }
+    [string]$network_name = "$($project_name)_default"
 
-    #if ($env:INSTANCEID) {
-    docker.exe stop $(docker.exe ps --filter "NETWORK=shinystudio_$($env:SITEPORT)_default" -q)
-    docker.exe rm -f $(docker.exe ps --filter "NETWORK=shinystudio_$($env:SITEPORT)_default" -aq)
-    #}
+    docker stop $(docker ps --filter "NETWORK=$network_name" -q)
+    docker rm -f $(docker ps --filter "NETWORK=$network_name" -aq)
 
-    docker-compose.exe -p "shinystudio_$($env:SITEPORT)" down
+    $env:SITEPORT = $_.BaseName
+
+    $env:CONTENTPATH = " "
+    $env:USER = $env:USERNAME
+    $env:USERID = 0
+    $env:HTTPSPORT = 0
+
+    docker-compose -p $project_name down
 }

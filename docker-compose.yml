@@ -7,11 +7,11 @@ services:
     depends_on:
       - shinystudio
     volumes:
-      - './configs/nginx/${SITEPORT}.conf:/etc/nginx/nginx.conf:z'
-      - './configs/nginx/certs:/etc/ssl/certs:z'
+      - './configs/${SITEPORT}/nginx.conf:/etc/nginx/nginx.conf:z'
+      - './configs/${SITEPORT}/certs:/etc/ssl/certs:z'
     ports:
       - ${SITEPORT}:80
-      - ${SSLPORT}:${SSLPORT}
+      - ${HTTPSPORT}:${HTTPSPORT}
 
   shinystudio:
     build:
@@ -22,14 +22,12 @@ services:
       - influxdb
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
-      - './configs/shinyproxy/background.png:/opt/shinyproxy/templates/grid-layout/assets/img/background.png:z'
-      - './configs/shinyproxy/logo.png:/opt/shinyproxy/templates/grid-layout/assets/img/logo.png:z'
-      - "${SITECONFIG}:/opt/shinyproxy/application.yml:z"
+      - './configs/${SITEPORT}/img:/opt/shinyproxy/templates/grid-layout/assets/img:z'
+      - "./configs/${SITEPORT}/application.yml:/opt/shinyproxy/application.yml:z"
     environment:
       - APPLICATION_LOGS_TO_STDOUT=false
-      - MOUNTPOINT=$MOUNTPOINT
       - SITEPORT=$SITEPORT
-      - SITEID=$SITEID
+      - CONTENTPATH=$CONTENTPATH
       - USER=$USER
       - USERID=$USERID
 
@@ -37,13 +35,9 @@ services:
     image: influxdb
     restart: always
     volumes:
-      - './configs/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:z'
       - 'influxdb_data:/var/lib/influxdb'
     environment:
       - INFLUXDB_DB=shinyproxy_usagestats
-      - INFLUXDB_ADMIN_ENABLED=true
-      - INFLUXDB_ADMIN_USER=admin
-      - INFLUXDB_ADMIN_PASSWORD=hLUCoz0gtymi
       - INFLUXDB_REPORTING_DISABLED=true
 
 volumes:

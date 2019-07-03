@@ -91,7 +91,7 @@ docker run --rm -it --name shinyproxy \
     -e USERID=$USERID \
     -e USER=$USER \
     -e PASSWORD=password \
-    -e MOUNTPOINT="${HOME}/ShinyStudio" \
+    -e CONTENTPATH="${HOME}/ShinyStudio" \
     -e SITEID=default \
     -p 8080:8080 \
     dm3ll3n/shinystudio
@@ -106,13 +106,13 @@ docker run --rm -it --name shinyproxy `
     -e USERID=1000 `
     -e USER=$env:USERNAME `
     -e PASSWORD=password `
-    -e MOUNTPOINT="/host_mnt/c/Users/$env:USERNAME/ShinyStudio" `
+    -e CONTENTPATH="/host_mnt/c/Users/$env:USERNAME/ShinyStudio" `
     -e SITEID=default `
     -p 8080:8080 `
     dm3ll3n/shinystudio
 ```
 
-> Notice the unique form of the path for the `MOUNTPOINT` variable in
+> Notice the unique form of the path for the `CONTENTPATH` variable in
 > the Windows setup.
 
 Once complete, open a web browser and navigate to
@@ -151,14 +151,14 @@ Variables:
 <td>Password to use at the ShinyProxy login screen.</td>
 </tr>
 <tr class="even">
-<td>MOUNTPOINT</td>
+<td>CONTENTPATH</td>
 <td>“${HOME}/ShinyStudio”</td>
 <td>The path to store site content and user settings.</td>
 </tr>
 <tr class="odd">
 <td>SITEID</td>
 <td>default</td>
-<td>Defines the folder name that this site’s content will reside in (<code>$MOUNTPOINT/sites/$SITEID</code>).</td>
+<td>Defines the folder name that this site’s content will reside in (<code>$CONTENTPATH/sites/$SITEID</code>).</td>
 </tr>
 <tr class="even">
 <td>ROOT</td>
@@ -195,7 +195,7 @@ cd ShinyStudio
 ./control.ps1 setup
 ```
 
-The default mountpoint is `$PWD/content`. To specify another mountpoint,
+The default CONTENTPATH is `$PWD/content`. To specify another CONTENTPATH,
 pass the desired path as an argument to the setup:
 
 ``` text
@@ -339,10 +339,10 @@ site with:
 
 ``` bash
 # Linux / Mac
-./control.sh setup "<mountpoint>"
+./control.sh setup "<CONTENTPATH>"
 
 # Windows
-./control.ps1 setup "<mountpoint>"
+./control.ps1 setup "<CONTENTPATH>"
 ```
 
 ### Multiple Sites

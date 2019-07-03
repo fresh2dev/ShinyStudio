@@ -1,13 +1,13 @@
-FROM dm3ll3n/shinystudio
+FROM dm3ll3n/shinystudio:dev
 
-### Additional customizations (apps, drivers, etc)
+### Additional customizations (apps, drivers, etc) to copy into the image.
 
-COPY configs/odbc/odbcinst.ini /etc/odbcinst.ini
-COPY configs/odbc/odbc.ini /etc/odbc.ini
+COPY configs/global/odbc/odbcinst.ini /etc/odbcinst.ini
+COPY configs/global/odbc/odbc.ini /etc/odbc.ini
 
-COPY configs/krb/krb5.conf /etc/krb5.conf
+COPY configs/global/krb/krb5.conf /etc/krb5.conf
 
-COPY configs/vscode/User/settings.json /code-server-template/User/settings.json
-COPY configs/vscode/User/snippets /code-server-template/User/snippets
+COPY configs/global/vscode/User/settings.json /code-server-template/User/settings.json
+COPY configs/global/vscode/User/snippets /code-server-template/User/snippets
 
 ###

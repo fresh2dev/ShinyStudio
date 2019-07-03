@@ -3,3 +3,4 @@
 .Rhistory
 .Rproj.user
 content/
+configs/[0-9]*

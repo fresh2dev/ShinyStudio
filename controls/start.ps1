@@ -1,30 +1,49 @@
+param(
+    [Parameter(Mandatory=$true)]
+    [string]$SitePort,
+    [Parameter(Mandatory=$true)]
+    [string]$ContentPath
+)
 
-Get-ChildItem ".\sites\$($env:INSTANCEID)*.yml" | ForEach-Object {
-    [string]$env:SITECONFIG = $_.FullName | Resolve-Path -Relative
+. ./controls/create.ps1 $SitePort
 
-    [uint16]$env:SITEPORT, [string]$env:SITEID = $_.BaseName.Split('_', 2)
+Get-ChildItem "configs" -Filter "$SitePort" -Directory |
+Where-Object { $_.BaseName -match '^\d+$' } |
+ForEach-Object {
+    [uint16]$user_id = $UID
 
-    if (-not $env:SITEID) {
-        $env:SITEID=$env:SITEPORT
-    }
+    if ($PSVersionTable.PSVersion.Major -lt 6 -or $IsWindows) {
+        $user_id = 1000
 
-    if (-not (Test-Path $env:MOUNTPOINT)) {
-        $null = New-Item $env:MOUNTPOINT -ItemType Directory -Force
-    }
-
-    $env:MOUNTPOINT = $env:MOUNTPOINT | Resolve-Path
-    # '/host_mnt/c/Users/...'
-    $env:MOUNTPOINT = '/host_mnt/' + ($env:MOUNTPOINT[0].ToString().ToLower() + $env:MOUNTPOINT.Substring(2).Replace('\', '/'))
-
-    [string]$nginx_conf = "./configs/nginx/$($env:SITEPORT).conf"
-    if (Test-Path $nginx_conf) {
-        [string[]]$lines = Get-Content $nginx_conf
-        foreach ($line in $lines) {
-            if ($line -match "\s+listen\s+(\d+)\s+ssl;") {
-                $env:SSLPORT = $Matches[1].ToString()
-                break
-            }
+        if (-not (Test-Path $ContentPath)) {
+            $null = New-Item $ContentPath -ItemType Directory -Force
         }
-        docker-compose.exe -p "shinystudio_$($env:SITEPORT)" up -d --build --no-recreate
+        # ensure path is the full path, including drive letter.
+        $ContentPath = ($ContentPath | Resolve-Path).Path
+        # convert Windows path to Docker-friendly path
+        # e.g., C:\Users/... ->'/host_mnt/c/Users/...'
+        $ContentPath = '/host_mnt/' + ($ContentPath[0].ToString().ToLower() + $ContentPath.Substring(2).Replace('\', '/'))
     }
+    
+    [string]$https_port = $null
+    [string[]]$lines = Get-Content $(Join-Path $_.FullName 'nginx.conf')
+    foreach ($line in $lines) {
+        if ($line -match "\s+listen\s+(\d+)\s+ssl;") {
+            $https_port = [int]::Parse($Matches[1]).ToString()
+            break
+        }
+    }
+
+    if (-not $https_port) {
+        $https_port = (Get-Random -Minimum 50000 -Maximum 60000).ToString()
+        Write-Host "No HTTPS port defined in nginx.conf; using random high-port: ${https_port}"
+    }
+
+    $env:SITEPORT = $_.BaseName
+    $env:CONTENTPATH = $ContentPath
+    $env:USER = $env:USERNAME
+    $env:USERID = $user_id
+    $env:HTTPSPORT = $https_port
+
+    docker-compose -p "shinystudio_$($env:SITEPORT)" up -d --build --no-recreate
 }

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
-source ./controls/stop.sh
+site_port="$1"
+content_path="$2"
 
-source ./controls/start.sh
+./controls/stop.sh "$site_port"
+
+./controls/start.sh "$site_port" "$content_path"
