@@ -1,9 +1,8 @@
-Get-ChildItem ".\sites\*.yml" | ForEach-Object {
+
+Get-ChildItem ".\sites\$($env:INSTANCEID)*.yml" | ForEach-Object {
     [string]$env:SITECONFIG = $_.FullName | Resolve-Path -Relative
 
-    [string[]]$tmp = $_.BaseName.Split('_', 2)
-    [uint16]$env:SITEPORT = $tmp[0]
-    [string]$env:SITEID = $tmp[1]
+    [uint16]$env:SITEPORT, [string]$env:SITEID = $_.BaseName.Split('_', 2)
 
     if (-not $env:SITEID) {
         $env:SITEID=$env:SITEPORT
@@ -17,12 +16,15 @@ Get-ChildItem ".\sites\*.yml" | ForEach-Object {
     # '/host_mnt/c/Users/...'
     $env:MOUNTPOINT = '/host_mnt/' + ($env:MOUNTPOINT[0].ToString().ToLower() + $env:MOUNTPOINT.Substring(2).Replace('\', '/'))
 
-    docker-compose.exe run --name "shinyproxy_$env:SITEPORT" -d `
-        -p "$($env:SITEPORT):8080" `
-        -e SITECONFIG="$env:SITECONFIG" `
-        -e SITEID=$env:SITEID `
-        -e MOUNTPOINT="$env:MOUNTPOINT" `
-        -e USER=$env:USER `
-        -e USERID=$env:USERID `
-        myshinystudio
+    [string]$nginx_conf = "./configs/nginx/$($env:SITEPORT).conf"
+    if (Test-Path $nginx_conf) {
+        [string[]]$lines = Get-Content $nginx_conf
+        foreach ($line in $lines) {
+            if ($line -match "\s+listen\s+(\d+)\s+ssl;") {
+                $env:SSLPORT = $Matches[1].ToString()
+                break
+            }
+        }
+        docker-compose.exe -p "shinystudio_$($env:SITEPORT)" up -d --build --no-recreate
+    }
 }

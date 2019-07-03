@@ -34,9 +34,9 @@ proxy:
     - id: reports
       display-name: Apps & Reports
       logo-url: 'fas fa-chart-line'
-      container-image: shinystudio_myshinystudio
+      container-image: "shinystudio_${SITEPORT}_shinystudio"
       container-cmd: ["/start.sh", "shiny-server"]
-      container-network: shinystudio-net
+      container-network: "shinystudio_${SITEPORT}_default"
       container-volumes:
         - "${MOUNTPOINT}/sites/${SITEID}/_apps:/srv/shiny-server:z"
         - 'shinystudio_r_libraries:/r-libs'
@@ -49,9 +49,9 @@ proxy:
     - id: documents
       display-name: Documents
       logo-url: 'fas fa-file-alt'
-      container-image: shinystudio_myshinystudio
+      container-image: "shinystudio_${SITEPORT}_shinystudio"
       container-cmd: ["/start.sh", "shiny-server"]
-      container-network: shinystudio-net
+      container-network: "shinystudio_${SITEPORT}_default"
       container-volumes:
         - "${MOUNTPOINT}/sites/${SITEID}/_docs:/srv/shiny-server:z"
         - 'shinystudio_r_libraries:/r-libs'
@@ -64,9 +64,9 @@ proxy:
     - id: personal
       display-name: Personal
       logo-url: 'far fa-folder-open'
-      container-image: shinystudio_myshinystudio
+      container-image: "shinystudio_${SITEPORT}_shinystudio"
       container-cmd: ["/start.sh", "shiny-server"]
-      container-network: shinystudio-net
+      container-network: "shinystudio_${SITEPORT}_default"
       container-volumes:
         - "${MOUNTPOINT}/users/#{proxy.userId}:/srv/shiny-server:z"
         - 'shinystudio_r_libraries:/r-libs'
@@ -79,9 +79,9 @@ proxy:
     - id: rstudio
       display-name: RStudio
       logo-url: 'fab fa-r-project'
-      container-image: shinystudio_myshinystudio
+      container-image: "shinystudio_${SITEPORT}_shinystudio"
       container-cmd: ["/start.sh", "rstudio"]
-      container-network: shinystudio-net
+      container-network: "shinystudio_${SITEPORT}_default"
       container-volumes:
         - "${MOUNTPOINT}/sites/${SITEID}:/home/#{proxy.userId}/__ShinyStudio__:z"
         - "${MOUNTPOINT}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
@@ -98,9 +98,9 @@ proxy:
     - id: superrstudio
       display-name: RStudio
       logo-url: 'fab fa-r-project'
-      container-image: shinystudio_myshinystudio
+      container-image: "shinystudio_${SITEPORT}_shinystudio"
       container-cmd: ["/start.sh", "rstudio"]
-      container-network: shinystudio-net
+      container-network: "shinystudio_${SITEPORT}_default"
       container-volumes:
         - "${MOUNTPOINT}:/home/#{proxy.userId}/__ShinyStudio__:z"
         - "${MOUNTPOINT}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
@@ -118,9 +118,9 @@ proxy:
     - id: vscode
       display-name: Visual Studio Code
       logo-url: 'fas fa-terminal'
-      container-image: shinystudio_myshinystudio
+      container-image: "shinystudio_${SITEPORT}_shinystudio"
       container-cmd: ["/start.sh", "vscode"]
-      container-network: shinystudio-net
+      container-network: "shinystudio_${SITEPORT}_default"
       container-volumes:
         - "${MOUNTPOINT}/sites/${SITEID}:/home/#{proxy.userId}/__ShinyStudio__:z"
         - "${MOUNTPOINT}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
@@ -137,9 +137,9 @@ proxy:
     - id: supervscode
       display-name: Visual Studio Code
       logo-url: 'fas fa-terminal'
-      container-image: shinystudio_myshinystudio
+      container-image: "shinystudio_${SITEPORT}_shinystudio"
       container-cmd: ["/start.sh", "vscode"]
-      container-network: shinystudio-net
+      container-network: "shinystudio_${SITEPORT}_default"
       container-volumes:
         - "${MOUNTPOINT}:/home/#{proxy.userId}/__ShinyStudio__:z"
         - "${MOUNTPOINT}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"

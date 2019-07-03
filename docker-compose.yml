@@ -1,15 +1,25 @@
 version: '3.5'
 
 services:
-  myshinystudio:
+  nginx:
+    image: nginx
+    restart: always
+    depends_on:
+      - shinystudio
+    volumes:
+      - './configs/nginx/${SITEPORT}.conf:/etc/nginx/nginx.conf:z'
+      - './configs/nginx/certs:/etc/ssl/certs:z'
+    ports:
+      - ${SITEPORT}:80
+      - ${SSLPORT}:${SSLPORT}
+
+  shinystudio:
     build:
       context: .
       dockerfile: Dockerfile
     restart: always
     depends_on:
       - influxdb
-    networks:
-      - shinystudio-net
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - './configs/shinyproxy/background.png:/opt/shinyproxy/templates/grid-layout/assets/img/background.png:z'
@@ -17,16 +27,15 @@ services:
       - "${SITECONFIG}:/opt/shinyproxy/application.yml:z"
     environment:
       - APPLICATION_LOGS_TO_STDOUT=false
-      - MOUNTPOINT=${MOUNTPOINT}
+      - MOUNTPOINT=$MOUNTPOINT
+      - SITEPORT=$SITEPORT
+      - SITEID=$SITEID
+      - USER=$USER
+      - USERID=$USERID
 
   influxdb:
     image: influxdb
-    container_name: shinystudio_influxdb
     restart: always
-    networks:
-      - shinystudio-net
-    ports:
-      - 8086:8086
     volumes:
       - './configs/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:z'
       - 'influxdb_data:/var/lib/influxdb'
@@ -40,9 +49,3 @@ services:
 volumes:
   influxdb_data:
 
-networks:
-  shinystudio-net:
-    name: shinystudio-net
-  default:
-     external:
-      name: shinystudio-net

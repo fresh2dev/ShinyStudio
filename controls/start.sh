@@ -18,5 +18,5 @@ for SITECONFIG in ./sites/*.yml; do
         -e MOUNTPOINT="$MOUNTPOINT" \
         -e USER=$USER \
         -e USERID=$USERID \
-        myshinystudio
+        shinystudio
 done
