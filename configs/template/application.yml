@@ -93,7 +93,7 @@ proxy:
       description: Full Screen
       port: 8787
       access-groups: [ 'admins' ]
-    - id: superrstudio
+    - id: rstudio-super
       display-name: RStudio
       logo-url: 'fab fa-r-project'
       container-image: "shinystudio_${SITEPORT}_shinystudio"
@@ -132,7 +132,7 @@ proxy:
       description: Full Screen
       port: 8443
       access-groups: [ 'admins' ]
-    - id: supervscode
+    - id: vscode-super
       display-name: Visual Studio Code
       logo-url: 'fas fa-terminal'
       container-image: "shinystudio_${SITEPORT}_shinystudio"

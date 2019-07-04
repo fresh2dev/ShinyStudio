@@ -1,4 +1,4 @@
-FROM dm3ll3n/shinystudio:dev
+FROM dm3ll3n/shinystudio
 
 ### Additional customizations (apps, drivers, etc) to copy into the image.
 
