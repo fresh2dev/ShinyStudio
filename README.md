@@ -29,6 +29,8 @@ solutions with the goal of providing:
   - easily reproducible, cross-platform setup leveraging Docker for all
     components.
 
+![](https://i.imgur.com/qc7bL1I.gif)
+
 ![](https://i.imgur.com/PRDW25E.png)
 
 There are two distributions of ShinyStudio, the *image* and the *stack*.
@@ -48,7 +50,7 @@ the [Rocker project](https://www.rocker-project.org/) to include:
 The image is great for a personal instance, a quick demo, or the
 building blocks for a very customized setup.
 
-> LINK TO SETUP
+[Jump to Setup the Image](#image)
 
 ![ShinyStudio](https://i.imgur.com/FIzE0d7.png)
 
@@ -68,7 +70,7 @@ reproducibility, scalability, and security. Only the NGINX port is
 exposed on the host system; all communication between ShinyProxy and
 other components happens inside an isolated Docker network.
 
-> LINK TO SETUP
+[Jump to Setup the Stack](#stack)
 
 ![](https://i.imgur.com/RsLeueG.png)
 
@@ -85,13 +87,7 @@ Windows).
 
 The instructions below assume a functional instance of Docker.
 
-The *stack* distribution of ShinyStudio introduces two additional
-requirements:
-
-  - [docker-compose](https://docs.docker.com/compose/install/)
-  - [Git](https://git-scm.com/downloads)
-
-> Setup must be run as a non-root user.
+> Note: Setup must be run as a non-root user.
 
 ### Image
 
@@ -149,7 +145,12 @@ Once complete, open a web browser and navigate to
 ### Stack
 
 The *stack* distribution of ShinyStudio is delivered through the [GitHub
-repo](https://github.com/dm3ll3n/ShinyStudio).
+repo](https://github.com/dm3ll3n/ShinyStudio) and introduces two
+additional requirements:
+
+  - [docker-compose](https://docs.docker.com/compose/install/) (ships
+    with Docker Desktop)
+  - [Git](https://git-scm.com/downloads)
 
 First, clone the repo and enter the new directory:
 
@@ -171,11 +172,11 @@ The default logins are:
 |    admin     |    admin     |
 |  superadmin  |  superadmin  |
 
-  - readers: can only view content from “Apps & Reports”, “Documents”,
-    and “Personal”.
-  - admins: can view all site content and develop content with RStudio
-    and VS Code.
-  - superadmins: can view and develop site content across multiple
+  - **readers**: can only view content from “Apps & Reports”,
+    “Documents”, and “Personal”.
+  - **admins**: can view all site content and develop content with
+    RStudio and VS Code.
+  - **superadmins**: can view and develop site content across multiple
     instances of ShinyStudio.
 
 #### Scripts
