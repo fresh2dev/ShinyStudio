@@ -1,0 +1,154 @@
+# BASIC AUTH
+proxy:
+  ### PERSONALIZATION ###
+  title: "ShinyStudio"
+  hide-navbar: false
+  ### AUTHENTICATION ###
+  admin-groups: ['admins', 'superadmins']
+  authentication: simple
+  users:
+  - name: superadmin
+   password: superadmin
+   groups: superadmins
+  - name: admin
+    password: admin
+    groups: admins
+  - name: user
+   password: user
+   groups: readers
+  ### DANGER ZONE ###
+  port: 8080 # LEAVE ME ALONE
+  landing-page: /
+  logo-url: file:///opt/shinyproxy/templates/grid-layout/assets/img/logo.png
+  favicon-path: /opt/shinyproxy/templates/grid-layout/assets/img/logo.png
+  template-path: ./templates/grid-layout
+  container-wait-time: 30000
+  heartbeat-rate: 15000
+  heartbeat-timeout: 120000
+  usage-stats-url: http://influxdb:8086/write?db=shinyproxy_usagestats
+  docker:
+    internal-networking: true
+  specs:
+    - id: reports
+      display-name: Apps & Reports
+      logo-url: 'fas fa-chart-line'
+      container-image: "${SITE_NAME}_shinystudio"
+      container-cmd: ["/start.sh", "shiny-server"]
+      container-network: "${SITE_NAME}_default"
+      container-volumes:
+        - "${CONTENT_PATH}/sites/${SITE_NAME}/_apps:/srv/shiny-server:z"
+        - "${SITE_NAME}_r_libraries:/r-libs"
+        - "${SITE_NAME}_py_environment:/pyenv"
+        - "${SITE_NAME}_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules"
+      access-groups: [ 'superadmins', 'admins', 'readers' ]
+      container-env:
+        USER: "#{proxy.userId}"
+        USERID: ${USERID}
+    - id: documents
+      display-name: Documents
+      logo-url: 'fas fa-file-alt'
+      container-image: "${SITE_NAME}_shinystudio"
+      container-cmd: ["/start.sh", "shiny-server"]
+      container-network: "${SITE_NAME}_default"
+      container-volumes:
+        - "${CONTENT_PATH}/sites/${SITE_NAME}/_docs:/srv/shiny-server:z"
+        - "${SITE_NAME}_r_libraries:/r-libs"
+        - "${SITE_NAME}_py_environment:/pyenv"
+        - "${SITE_NAME}_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules"
+      access-groups: [ 'superadmins', 'admins', 'readers' ]
+      container-env:
+        USER: "#{proxy.userId}"
+        USERID: ${USERID}
+    - id: personal
+      display-name: Personal
+      logo-url: 'far fa-folder-open'
+      container-image: "${SITE_NAME}_shinystudio"
+      container-cmd: ["/start.sh", "shiny-server"]
+      container-network: "${SITE_NAME}_default"
+      container-volumes:
+        - "${CONTENT_PATH}/users/#{proxy.userId}:/srv/shiny-server:z"
+        - "${SITE_NAME}_r_libraries:/r-libs"
+        - "${SITE_NAME}_py_environment:/pyenv"
+        - "${SITE_NAME}_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules"
+      access-groups: [ 'superadmins', 'admins', 'readers' ]
+      container-env:
+        USER: "#{proxy.userId}"
+        USERID: ${USERID}
+    - id: rstudio
+      display-name: RStudio
+      logo-url: 'fab fa-r-project'
+      container-image: "${SITE_NAME}_shinystudio"
+      container-cmd: ["/start.sh", "rstudio"]
+      container-network: "${SITE_NAME}_default"
+      container-volumes:
+        - "${CONTENT_PATH}/sites/${SITE_NAME}:/home/#{proxy.userId}/__ShinyStudio__:z"
+        - "${CONTENT_PATH}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
+        - "${CONTENT_PATH}/users/#{proxy.userId}/.rstudio:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z"
+        - "${SITE_NAME}_r_libraries:/r-libs"
+        - "${SITE_NAME}_py_environment:/pyenv"
+        - "${SITE_NAME}_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules"
+      container-env:
+        USER: "#{proxy.userId}"
+        USERID: ${USERID}
+      description: Full Screen
+      port: 8787
+      access-groups: [ 'admins' ]
+    - id: rstudio-super
+      display-name: RStudio
+      logo-url: 'fab fa-r-project'
+      container-image: "${SITE_NAME}_shinystudio"
+      container-cmd: ["/start.sh", "rstudio"]
+      container-network: "${SITE_NAME}_default"
+      container-volumes:
+        - "${CONTENT_PATH}:/home/#{proxy.userId}/__ShinyStudio__:z"
+        - "${CONTENT_PATH}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
+        - "${CONTENT_PATH}/users/#{proxy.userId}/.rstudio:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z"
+        - "${SITE_NAME}_r_libraries:/r-libs"
+        - "${SITE_NAME}_py_environment:/pyenv"
+        - "${SITE_NAME}_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules"
+      container-env:
+        USER: "#{proxy.userId}"
+        USERID: ${USERID}
+        SITE_NAME: ${SITE_NAME}
+      description: Full Screen
+      port: 8787
+      access-groups: [ 'superadmins' ]
+    - id: vscode
+      display-name: Visual Studio Code
+      logo-url: 'fas fa-terminal'
+      container-image: "${SITE_NAME}_shinystudio"
+      container-cmd: ["/start.sh", "vscode"]
+      container-network: "${SITE_NAME}_default"
+      container-volumes:
+        - "${CONTENT_PATH}/sites/${SITE_NAME}:/home/#{proxy.userId}/__ShinyStudio__:z"
+        - "${CONTENT_PATH}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
+        - "${CONTENT_PATH}/users/#{proxy.userId}/.vscode:/home/#{proxy.userId}/.local/share/code-server:z"
+        - "${SITE_NAME}_r_libraries:/r-libs"
+        - "${SITE_NAME}_py_environment:/pyenv"
+        - "${SITE_NAME}_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules"
+      container-env:
+        USER: "#{proxy.userId}"
+        USERID: ${USERID}
+      description: Full Screen
+      port: 8443
+      access-groups: [ 'admins' ]
+    - id: vscode-super
+      display-name: Visual Studio Code
+      logo-url: 'fas fa-terminal'
+      container-image: "${SITE_NAME}_shinystudio"
+      container-cmd: ["/start.sh", "vscode"]
+      container-network: "${SITE_NAME}_default"
+      container-volumes:
+        - "${CONTENT_PATH}:/home/#{proxy.userId}/__ShinyStudio__:z"
+        - "${CONTENT_PATH}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
+        - "${CONTENT_PATH}/users/#{proxy.userId}/.vscode:/home/#{proxy.userId}/.local/share/code-server:z"
+        - "${SITE_NAME}_r_libraries:/r-libs"
+        - "${SITE_NAME}_py_environment:/pyenv"
+        - "${SITE_NAME}_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules"
+      container-env:
+        USER: "#{proxy.userId}"
+        USERID: ${USERID}
+        SITE_NAME: ${SITE_NAME}
+      description: Full Screen
+      port: 8443
+      access-groups: [ 'superadmins' ]
