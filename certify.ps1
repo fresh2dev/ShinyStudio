@@ -53,6 +53,8 @@ if ($Email) {
         --rsa-key-size $RSA_Key_Size \
         --agree-tos \
         --force-renewal"
-
-    docker-compose down
 }
+
+docker-compose up -d --no-recreate
+
+docker-compose exec nginx nginx -s reload
