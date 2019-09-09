@@ -1,17 +1,26 @@
+
 version: '3.5'
 
 services:
   nginx:
     image: nginx
     restart: always
-    depends_on:
-      - shinystudio
     volumes:
-      - './configs/${SITEPORT}/nginx.conf:/etc/nginx/nginx.conf:z'
-      - './configs/${SITEPORT}/certs:/etc/ssl/certs:z'
+      - './config/container/nginx.conf:/etc/nginx/nginx.conf:z'
+      - './config/container/letsencrypt:/etc/letsencrypt:z'
+      - 'certbot_data:/var/www/certbot'
     ports:
-      - ${SITEPORT}:80
-      - ${HTTPSPORT}:${HTTPSPORT}
+      - ${HTTP_PORT}:80
+      - ${HTTPS_PORT}:${HTTPS_PORT}
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - './config/container/letsencrypt:/etc/letsencrypt'
+      - 'certbot_data:/var/www/certbot'
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   shinystudio:
     build:
@@ -22,14 +31,14 @@ services:
       - influxdb
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
-      - './configs/${SITEPORT}/img:/opt/shinyproxy/templates/grid-layout/assets/img:z'
-      - "./configs/${SITEPORT}/application.yml:/opt/shinyproxy/application.yml:z"
+      - './config/container/img:/opt/shinyproxy/templates/grid-layout/assets/img:z'
+      - "./config/container/application.yml:/opt/shinyproxy/application.yml:z"
     environment:
       - APPLICATION_LOGS_TO_STDOUT=false
-      - SITEPORT=$SITEPORT
-      - CONTENTPATH=$CONTENTPATH
-      - USER=$USER
-      - USERID=$USERID
+      - SITE_NAME=${COMPOSE_PROJECT_NAME}
+      - CONTENT_PATH=${CONTENT_PATH}
+      #- USER=${USER}
+      - USERID=${USERID}
 
   influxdb:
     image: influxdb
@@ -42,4 +51,7 @@ services:
 
 volumes:
   influxdb_data:
-
+  certbot_data:
+  r_libraries:
+  py_environment:
+  pwsh_modules:

@@ -8,14 +8,14 @@ proxy:
   authentication: simple
   users:
   - name: superadmin
-   password: superadmin
-   groups: superadmins
+    password: superadmin
+    groups: superadmins
   - name: admin
     password: admin
     groups: admins
   - name: user
-   password: user
-   groups: readers
+    password: user
+    groups: readers
   ### DANGER ZONE ###
   port: 8080 # LEAVE ME ALONE
   landing-page: /
