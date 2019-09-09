@@ -6,7 +6,7 @@ services:
     image: nginx
     restart: always
     volumes:
-      - './config/container/nginx.conf:/etc/nginx/nginx.conf:z'
+      - './nginx.conf:/etc/nginx/nginx.conf:z'
       - './config/container/letsencrypt:/etc/letsencrypt:z'
       - 'certbot_data:/var/www/certbot'
     ports:
@@ -32,7 +32,7 @@ services:
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - './config/container/img:/opt/shinyproxy/templates/grid-layout/assets/img:z'
-      - "./config/container/application.yml:/opt/shinyproxy/application.yml:z"
+      - "./application.yml:/opt/shinyproxy/application.yml:z"
     environment:
       - APPLICATION_LOGS_TO_STDOUT=false
       - SITE_NAME=${COMPOSE_PROJECT_NAME}
