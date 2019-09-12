@@ -5,14 +5,11 @@
   - [Overview](#overview)
       - [ShinyStudio Image](#shinystudio-image)
       - [ShinyStudio Stack](#shinystudio-stack)
-  - [Setup](#setup)
+  - [Getting Started](#getting-started)
       - [Image](#image)
       - [Stack](#stack)
   - [Develop](#develop)
   - [Tools](#tools)
-  - [Configuration](#configuration)
-      - [Authentication](#authentication)
-      - [SSL/TLS for HTTPS](#ssltls-for-https)
   - [References](#references)
 
 ## Overview
@@ -33,7 +30,8 @@ solutions with the goal of providing:
 
 ![](https://i.imgur.com/PRDW25E.png)
 
-There are two distributions of ShinyStudio, the *image* and the *stack*.
+There are two distributions of ShinyStudio, the *image* and the *stack*,
+explained below.
 
 ### ShinyStudio Image
 
@@ -50,7 +48,7 @@ the [Rocker project](https://www.rocker-project.org/) to include:
 The image is great for a personal instance, a quick demo, or the
 building blocks for a very customized setup.
 
-[Jump to Setup the Image](#image)
+[Get Started with the Image](#image)
 
 ![ShinyStudio](https://i.imgur.com/FIzE0d7.png)
 
@@ -58,23 +56,19 @@ building blocks for a very customized setup.
 
 The ShinyStudio stack builds upon the image to incorporate:
 
-  - [NGINX](https://www.nginx.com/) for simple HTTPS support.
-  - [InfluxDB](https://www.influxdata.com/) for tracking site usage.
+  - [NGINX](https://www.nginx.com/) with HTTPS enabled.
+  - [InfluxDB](https://www.influxdata.com/) for monitoring site usage.
 
-The stack provides a more enterprise-ready distribution, as NGINX
-provides an simple solution for HTTPS, and site usage is stored in
-InfluxDB.
-
-Moreover, each component of the stack is run in a Docker container for
+Each component of the stack is run in a Docker container for
 reproducibility, scalability, and security. Only the NGINX port is
 exposed on the host system; all communication between ShinyProxy and
 other components happens inside an isolated Docker network.
 
-[Jump to Setup the Stack](#stack)
+[Get Started with the Stack](#stack)
 
 ![](https://i.imgur.com/RsLeueG.png)
 
-## Setup
+## Getting Started
 
 The setup has been verified to work on each of
 [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) (for
@@ -82,10 +76,8 @@ Linux) and [Docker
 Desktop](https://www.docker.com/products/docker-desktop) (for Mac and
 Windows).
 
-> Note: when upgrading ShinyStudio, setup from scratch and migrate
-> existing content/settings afterward.
-
-The instructions below assume a functional instance of Docker.
+> Note: when upgrading ShinyStudio, please setup from scratch and
+> migrate existing content/settings afterward.
 
 > Note: Setup must be run as a non-root user.
 
@@ -112,8 +104,8 @@ docker run -d --restart always --name shinyproxy \
     -e USERID=$USERID \
     -e USER=$USER \
     -e PASSWORD=password \
-    -e CONTENTPATH="${HOME}/ShinyStudio" \
-    -e SITEPORT=8080 \
+    -e CONTENT_PATH="${HOME}/ShinyStudio" \
+    -e SITE_NAME=shinystudio \
     -p 8080:8080 \
     dm3ll3n/shinystudio
 ```
@@ -129,13 +121,13 @@ docker run -d --restart always --name shinyproxy `
     -e USERID=1000 `
     -e USER=$env:USERNAME `
     -e PASSWORD=password `
-    -e CONTENTPATH="/host_mnt/c/Users/$env:USERNAME/ShinyStudio" `
-    -e SITEPORT=8080 `
+    -e CONTENT_PATH="/host_mnt/c/Users/$env:USERNAME/ShinyStudio" `
+    -e SITE_NAME=shinystudio `
     -p 8080:8080 `
     dm3ll3n/shinystudio
 ```
 
-> Notice the unique form of the path for the `CONTENTPATH` variable in
+> Notice the unique form of the path for the `CONTENT_PATH` variable in
 > the Windows setup.
 
 Once complete, open a web browser and navigate to
@@ -152,19 +144,31 @@ additional requirements:
     with Docker Desktop)
   - [Git](https://git-scm.com/downloads)
 
-First, clone the repo and enter the new directory:
+HTTPS is configured by default, so SSL/TLS certs are required in order
+for the stack to operate. Use the provided script `certify.sh`
+(`certify.ps1` for Windows) to create a self-signed certificate, or to
+request one from LetsEncrypt (more on that).
+
+#### Minimal setup:
 
 ``` text
+# copy the setup files.
 git clone https://github.com/dm3ll3n/ShinyStudio
 
+# enter the directory.
 cd ShinyStudio
+
+# run certify to generate self-signed cert.
+./certify.[sh/ps1]
 ```
 
-Complete the setup using either the provided scripts or by executing the
-commands manually. Once complete, open a web browser and navigate to
-`http://<hostname>:8080`.
+Now, browse to `http://<hostname>` (e.g., `http://localhost`) to access
+ShinyStudio. On first launch, you will need to accept the warning about
+an untrusted certificate. See the customized setup to see how to request
+a trusted cert from LetsEncrypt.
 
-The default logins are:
+The default logins are below. See the customized setup to see how to
+add/remove accounts.
 
 | **username** | **password** |
 | :----------: | :----------: |
@@ -172,101 +176,86 @@ The default logins are:
 |    admin     |    admin     |
 |  superadmin  |  superadmin  |
 
+#### Customized setup:
+
+There are three files essential to a customized configuration:
+
+1.  `.env`
+
+> The docker-compose environment file. The project name, content path,
+> and HTTP ports can be changed here.
+
+Note that Docker volume names are renamed along with the project name,
+so be prepared to migrate or recreate data stored in Docker volumes when
+changing the project name.
+
+2.  `application.yml`
+
+> The ShinyProxy config file. Users can be added/removed here. Other
+> configurations are available too, such as the site title and the
+> ability to provide a non-standard landing page.
+
+Using the provided template, you can assign users to the following
+groups with tiered access:
+
   - **readers**: can only view content from “Apps & Reports”,
     “Documents”, and “Personal”.
   - **admins**: can view all site content and develop content with
     RStudio and VS Code.
   - **superadmins**: can view and develop site content across multiple
-    instances of ShinyStudio.
+    instances of ShinyStudio. Can also manage *all* user files.
 
-#### Scripts
+Review the [ShinyProxy configuration
+documentation](https://www.shinyproxy.io/configuration/) for all
+options.
 
-The quickest way to get up-and-running is to use the provided control
-scripts. The scripts are provided as both Bash scripts (`.sh`) and
-PowerShell scripts (`.ps1`); use the script that is appropriate for your
-OS.
+3.  `nginx.conf`
 
-The command below will create a new site configuration based on the
-template at `configs/template`, then start it.
+> The NGINX config file. Defines the accepted site name and what ports
+> to listen on.
 
-``` text
-# Bash
-./control.sh start 8080
+If you change the ports here, you must also change the ports defined in
+the `.env` file. Also, if you change the domain name, you must
+provide/generate a new certificate for it.
 
-# OR
+4.  `certify.[sh/ps1]`
 
-# PowerShell
-./control.ps1 start 8080
-```
+> The script used to generate a self-signed cert, or to request a
+> trusted cert from LetsEncrypt.
 
-#### Manual
+With no parameters, `certify` generates a self-signed cert for
+`example.com` (the default domain name defined in `nginx.conf`).
 
-To perform the setup without the provided scripts, first copy the
-`configs/template` directory and rename it *according to the HTTP port
-that this new site will listen on*.
+To generate a self-signed cert with another domain name, first edit the
+domain name in `nginx.conf`. Afterward, generate a new cert with:
 
-``` text
-# Bash
-cp -R 'configs/template' 'configs/8080'
+    ./certify.sh <domain name>
+    
+    # e.g., ./certify.sh www.shinystudio.com
 
-# OR
+If your server is accessible from the web, you can request a trusted
+certificate from LetsEncrypt. First, edit `nginx.conf` with your domain
+name, then request a new cert from LetsEncrypt like so:
 
-# PowerShell
-Copy-Item 'configs/template' 'configs/8080' -Recurse
-```
+    ./certify.sh <domain name> <email>
+    
+    # e.g., ./certify.sh www.shinystudio.com donald@email.com
 
-Then, set the required environment variables followed by `docker-compose
-up`:
+CertBot, included in the stack, will automatically renew your
+LetsEncrypt certificate.
 
-  - Bash (Linux/Mac)
+To manage the services in the stack, use the native docker-compose
+commands, e.g.:
 
-<!-- end list -->
-
-``` text
-# specify the site's port (./configs/<port>)
-export SITEPORT=8080
-
-# specify where to store content.
-export CONTENTPATH="./content"
-
-# specify the HTTPS port defined in 'nginx.conf',
-# or use a random high-port if SSL is not enabled.
-export HTTPSPORT=$((50000 + RANDOM % 10000))
-
-# use the current user ID and user name.
-export USERID=$UID
-export USER
-
-# build and start the project; the project name is required.
-docker-compose -p "shinystudio_${SITEPORT}" up -d --build
-```
-
-  - PowerShell (Windows)
-
-<!-- end list -->
-
-``` text
-# specify the site's port (./configs/<port>)
-$env:SITEPORT = '8080'
-
-# specify where to store content.
-$env:CONTENTPATH = '/host_mnt/c/Users/$env:USERNAME/ShinyStudio/content'
-
-# specify the HTTPS port defined in 'nginx.conf',
-# or use a random high-port if SSL is not enabled.
-$env:HTTPSPORT = (Get-Random -Minimum 50000 -Maximum 60000).ToString()
-
-# use the current user ID and user name.
-$env:USER = $env:USERNAME
-$env:USERID = 1000
-
-# build and start the project; the project name is required.
-docker-compose -p "shinystudio_$($env:SITEPORT)" up -d --build
-```
+    # stop all services.
+    docker-compose down
+    
+    # start all services.
+    docker-compose up -d
 
 ## Develop
 
-Open your IDE of choice and notice two important directories:
+Open either RStudio or VS Code and notice two important directories:
 
   - \_\_ShinyStudio\_\_
   - \_\_Personal\_\_
@@ -311,84 +300,10 @@ These are persistent because they are built into the image.
 |                Installed Apps |   **No**   |
 |             Installed Drivers |   **No**   |
 
-## Configuration
-
-> The information below only applies to the ShinyStudio *stack*.
-
-Many of the configuration options are accessible through the ShinyProxy
-configuration file, `application.yml`. Here, you can change the site
-title, change the authentication mechanism, and further refine access.
-
-Review the [ShinyProxy configuration
-documentation](https://www.shinyproxy.io/configuration/) for all
-options.
-
-### Authentication
-
-ShinyProxy supports various authentication mechanisms (basic, LDAP,
-social, …).
-
-To change from basic auth (default) to LDAP auth, open the site’s
-configuration file (`configs/8080/application.yml`), locate the section
-below…
-
-``` text
-authentication: simple
-users:
-  - name: superadmin
-    password: *change*me*
-    groups: superadmins
-  - name: admin
-    password: *change*me*
-    groups: admins
-  - name: user
-    password: *change*me*
-    groups: readers
-```
-
-…and replace it with the following, after providing values appropriate
-for your environment:
-
-``` text
-ldap:
-    url: ldap://mydomain.com/DC=mydomain,DC=com
-    manager-dn: CN=svc.user,OU=Users,DC=mydomain,DC=com
-    manager-password: ...
-    user-search-base: 
-    user-search-filter: (sAMAccountName={0})
-    group-search-base: OU=Groups
-    group-search-filter: (member={0})
-```
-
-Afterward, you may want to refine access to various apps using the
-`access-groups` option available to each:
-
-``` text
-access-groups: [ "reader-group", "admin-group", "superadmin-group" ]
-```
-
-### SSL/TLS for HTTPS
-
-To encrypt communication over HTTPS, edit the provided NGINX
-configuration file for the site in question (`configs/8080/nginx.conf`).
-
-First, place the site’s certificate and key in `configs/8080/certs/`.
-
-Then, uncomment the designated lines in `nginx.conf` and supply the
-desired HTTPS port in the three sections indicated in the file.
-
-Finally, restart the site with:
-
-``` text
-./control.[sh/ps1] restart 8080
-```
-
-If configured properly, HTTP requests to ShinyProxy will be redirected
-to HTTPS.
-
 ## References
 
   - <https://www.shinyproxy.io/>
   - <https://www.rocker-project.org/>
   - <https://telethonkids.wordpress.com/2019/02/08/deploying-an-r-shiny-app-with-docker/>
   - <https://appsilon.com/alternatives-to-scaling-shiny>
+  - <https://github.com/wmnnd/nginx-certbot>
