@@ -27,7 +27,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        tag: ${BRANCH}
+        tag: ${IMAGE_TAG}
     restart: always
     depends_on:
       - influxdb
