@@ -26,6 +26,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        tag: ${BRANCH}
     restart: always
     depends_on:
       - influxdb

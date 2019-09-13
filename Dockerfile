@@ -1,4 +1,5 @@
-FROM dm3ll3n/shinystudio
+ARG tag=latest
+FROM dm3ll3n/shinystudio:$tag
 
 ### Additional customizations (apps, drivers, etc) to copy into the image.
 
