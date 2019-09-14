@@ -6,7 +6,7 @@ param (
 )
 
 function certbot_run($cmd) {
-    docker-compose run --rm --entrypoint "/bin/sh -c" certbot $cmd
+    docker-compose run --rm --entrypoint "/bin/sh -c" certbot $cmd.Replace([System.Environment]::NewLine, "`n")
 }
 
 $domain = $DomainName[0]
