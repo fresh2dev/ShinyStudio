@@ -6,7 +6,7 @@
     },
     "python.venvPath": "/pyenv",
     "python.jediEnabled": false,
-    "python.dataScience.useDefaultConfigForJupyter": false,
+    "python.dataScience.useDefaultConfigForJupyter": true,
     "python.dataScience.searchForJupyter": false,
     "python.dataScience.changeDirOnImportExport": false,
     "files.hotExit": "off"

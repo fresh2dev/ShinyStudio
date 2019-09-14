@@ -130,7 +130,7 @@ proxy:
         USER: "#{proxy.userId}"
         USERID: ${USERID}
       description: Full Screen
-      port: 8443
+      port: 8080
       access-groups: [ 'admins' ]
     - id: vscode-super
       display-name: Visual Studio Code
@@ -150,5 +150,5 @@ proxy:
         USERID: ${USERID}
         SITE_NAME: ${SITE_NAME}
       description: Full Screen
-      port: 8443
+      port: 8080
       access-groups: [ 'superadmins' ]
