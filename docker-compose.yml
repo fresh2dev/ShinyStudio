@@ -41,7 +41,23 @@ services:
       - APPLICATION_LOGS_TO_STDOUT=false
       - SITE_NAME=${COMPOSE_PROJECT_NAME}
       - CONTENT_PATH=${CONTENT_PATH}
-      #- USER=${USER}
+      - USERID=${USERID}
+
+  cronicle:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TAG: ${TAG}
+    command: [ "cronicle" ]
+    restart: always
+    volumes:
+      - "${CONTENT_PATH}:/__ShinyStudio__:z"
+      - "r_libraries:/r-libs"
+      - "py_environment:/conda3"
+      - "pwsh_modules:/home/${USER}/.local/share/powershell/Modules"
+      - cronicle_data:/opt/cronicle
+    environment:
       - USERID=${USERID}
 
   influxdb:
@@ -55,6 +71,7 @@ services:
 
 volumes:
   influxdb_data:
+  cronicle_data:
   certbot_data:
   r_libraries:
   py_environment:
