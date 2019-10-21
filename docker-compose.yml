@@ -20,7 +20,7 @@ services:
     image: certbot/certbot
     restart: unless-stopped
     volumes:
-      - './config/container/letsencrypt:/etc/letsencrypt'
+      - './config/container/letsencrypt:/etc/letsencrypt:z'
       - 'certbot_data:/var/www/certbot'
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
@@ -29,7 +29,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        tag: ${IMAGE_TAG}
+        TAG: ${TAG}
+    command: [ "shinyproxy" ]
     restart: always
     depends_on:
       - influxdb
@@ -38,6 +39,7 @@ services:
       - './config/container/img:/opt/shinyproxy/templates/grid-layout/assets/img:z'
       - "./application.yml:/opt/shinyproxy/application.yml:z"
     environment:
+      - TAG=${TAG}
       - APPLICATION_LOGS_TO_STDOUT=false
       - SITE_NAME=${COMPOSE_PROJECT_NAME}
       - CONTENT_PATH=${CONTENT_PATH}
