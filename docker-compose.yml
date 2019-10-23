@@ -30,6 +30,7 @@ services:
       dockerfile: Dockerfile
       args:
         TAG: ${TAG}
+    image: ${COMPOSE_PROJECT_NAME}_shinystudio:${TAG}
     command: [ "shinyproxy" ]
     restart: always
     depends_on:
@@ -51,6 +52,7 @@ services:
       dockerfile: Dockerfile
       args:
         TAG: ${TAG}
+    image: ${COMPOSE_PROJECT_NAME}_cronicle:${TAG}
     command: [ "cronicle" ]
     restart: always
     volumes:
