@@ -54,15 +54,18 @@ services:
         TAG: ${TAG}
     image: ${COMPOSE_PROJECT_NAME}_cronicle:${TAG}
     command: [ "cronicle" ]
+    hostname: cronicle
     restart: always
     volumes:
-      - "${CONTENT_PATH}:/__ShinyStudio__:z"
+      - "${CONTENT_PATH}:/home/shinystudio/__ShinyStudio__:z"
       - "r_libraries:/r-libs"
       - "py_environment:/conda3"
-      - "pwsh_modules:/home/${USER}/.local/share/powershell/Modules"
-      - cronicle_data:/opt/cronicle
+      - "cronicle_data:/opt/cronicle"
+      - "pwsh_modules:/home/shinystudio/.local/share/powershell/Modules"
     environment:
+      - USER=shinystudio
       - USERID=${USERID}
+      - SITE_NAME=${COMPOSE_PROJECT_NAME}
 
   influxdb:
     image: influxdb
