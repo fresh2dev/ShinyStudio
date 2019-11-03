@@ -1,0 +1,37 @@
+#cloud-config
+users:
+  - name: <UserName>
+    groups: sudo,docker
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+device_aliases: {'shinystudio': '/dev/sda'}
+disk_setup:
+    shinystudio:
+         table_type: mbr
+         layout: True
+         overwrite: False
+fs_setup:
+    - label: shinystudio
+      filesystem: ext4
+      device: /dev/sda
+mounts:
+  - [ /dev/disk/by-id/scsi-0DO_Volume_<VolumeName>, /mnt/shinystudio, ext4, "discard,defaults,noatime", "0", "0" ]
+runcmd:
+  # copy ssh keys from root.
+  - mkdir /home/$(id -un 1000)/.ssh
+  - cp /root/.ssh/authorized_keys /home/$(id -un 1000)/.ssh/authorized_keys
+  - chown -R 1000:1000 /home/$(id -un 1000)/.ssh
+  # ensure volumes are mounted.
+  - mount -a
+  # move docker volumes to EBS store.
+  - systemctl stop docker
+  - rm -rf /var/lib/docker/volumes
+  - mkdir -p /mnt/shinystudio/docker/volumes
+  - ln -s /mnt/shinystudio/docker/volumes /var/lib/docker/volumes
+  - systemctl start docker
+  # pull, build, and start shinystudio.
+  - git clone --depth 1 "<Repo>" -b "<Branch>" /mnt/shinystudio/shinystudio-setup
+  - chown -R 1000:1000 /mnt/shinystudio
+  - cd /mnt/shinystudio/shinystudio-setup
+  - docker-compose build
+  - if [ ! -d "./config/container/letsencrypt/live/<DomainName>" ]; then bash ./certify.sh <DomainName> <EmailAddress>; else docker-compose up -d; fi
