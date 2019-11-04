@@ -15,7 +15,9 @@ param (
     [Alias('h')]
     [switch]$Help,
     [Alias('f')]
-    [switch]$Force
+    [switch]$Force,
+    [Alias('w')]
+    [switch]$Wait
 )
 
 begin {
@@ -185,6 +187,16 @@ This script is provided as-is with no warranty or liability of any kind.
         )
 
         (request 'floating_ips' -Body @{'region'=$region} -Force:$Force).floating_ip
+    }
+
+    function Get-SizePrices {
+        param()
+
+        (request 'sizes').sizes |
+            Where-Object Available |
+                Select-Object slug, memory, vcpus, disk, transfer, price_monthly,
+                    @{Name='price_hourly';Expression={[math]::round($_.price_hourly, 4)}} |
+                        Format-Table -AutoSize
     }
 
     function Get-EbsVolume {
@@ -619,10 +631,12 @@ process {
             log "View setup status with:"
             log "tail -f /var/log/cloud-init-output.log"
 
-            if (-not $Force) {
-                $proceed = confirm -Prompt 'Wait for HTTP access (~5 minutes)?' -EA 0
+            if ($Wait -or -not $Force) {
+                if (-not $Wait) {
+                    [bool]$Wait = confirm -Prompt 'Wait for HTTP access (~5 minutes)?' -EA 0
+                }
 
-                if ($proceed) {
+                if ($Wait) {
                     $null = Wait-HTTPStatus -Uri "http://$($vars['FloatingIp'])" -StatusCode 200,301,302
                 }
 
@@ -657,10 +671,12 @@ process {
 
             $null = Start-DropletAction $droplet.id -ActionType 'reboot' -Force:$Force | Wait-Action
 
-            if (-not $Force) {
-                [bool]$proceed = confirm -Prompt 'Wait for HTTP access?' -EA 0
+            if ($Wait -or -not $Force) {
+                if (-not $Wait) {
+                    [bool]$Wait = confirm -Prompt 'Wait for HTTP access?' -EA 0
+                }
 
-                if ($proceed) {
+                if ($Wait) {
                     $vars = Prompt-IfNull $vars -keys 'FloatingIp'
                     Start-Sleep -Seconds 5
                     $null = Wait-HTTPStatus -Uri "http://$($vars['FloatingIp'])" -StatusCode 200,301,302
