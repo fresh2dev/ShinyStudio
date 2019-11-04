@@ -51,6 +51,7 @@ if ($Email) {
         $email_arg \
         $domain_args \
         --rsa-key-size $RSA_Key_Size \
+        --non-interactive \
         --agree-tos \
         --force-renewal"
 }

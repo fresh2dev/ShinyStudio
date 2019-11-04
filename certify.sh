@@ -63,6 +63,7 @@ if [ ! -z "$Email" ]; then
         $email_arg \
         $domain_args \
         --rsa-key-size 4096 \
+        --non-interactive \
         --agree-tos \
         --force-renewal"
 fi
