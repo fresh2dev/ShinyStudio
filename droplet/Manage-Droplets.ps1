@@ -2,18 +2,19 @@
 param (
     [string[]]$Templates,
     [string]$CloudInit = 'cloud-init.yml',
-    [Alias('Get')]
-    [switch]$Info,
-    [Alias('New')]
-    [switch]$Create,
-    [Alias('Restart')]
+    [Alias('ls')]
+    [switch]$Get,
+    [Alias('up')]
+    [switch]$New,
+    [Alias('restart')]
     [switch]$Reboot,
-    [Alias('Remove')]
+    [Alias('down')]
     [switch]$Destroy,
-    [Alias('Enter')]
-    [switch]$SSH,
+    [Alias('ssh')]
+    [switch]$Enter,
     [Alias('h')]
     [switch]$Help,
+    [Alias('f')]
     [switch]$Force
 )
 
@@ -32,7 +33,7 @@ This script is provided as-is with no warranty or liability of any kind.
                         Select-Object -ExpandProperty FullName
     }
 
-    if (([bool]$Info + [bool]$Create + [bool]$Reboot + [bool]$Destroy + [bool]$SSH) -gt 1) {
+    if (([bool]$Get + [bool]$New + [bool]$Reboot + [bool]$Destroy + [bool]$Enter) -gt 1) {
         Write-Error 'Only one action supported per call.'
     }
 
@@ -528,11 +529,12 @@ process {
 
         if (-not $vars['VolumeName']) {
             $vars['VolumeName'] = $vars['DropletName']
+            Write-TemplateVar $script:Template -Key 'VolumeName' -Value $vars['VolumeName']
         }
 
         [string]$script:token = $vars['Token']
 
-        if ($Create) {
+        if ($New) {
             if (-not (Test-Path $CloudInit)) {
                 Write-Error "Cloud-Init file not found: '$CloudInit'"
             }
@@ -559,6 +561,9 @@ process {
 
             if (-not $vars['FloatingIp']) {
                 $vars['FloatingIp'] = Read-Host 'Floating IP ("x.x.x.x", leave empty to create one): '
+                if ($vars['FloatingIp']) {
+                    Write-TemplateVar $script:Template -Key 'FloatingIp' -Value $vars['FloatingIp']
+                }
             }
             
             [object]$float_ip = $null
@@ -596,6 +601,7 @@ process {
 
             if (-not $vars['DomainName']) {
                 $vars['DomainName'] = $vars['FloatingIp']
+                Write-TemplateVar -Template $script:Template -Key 'DomainName' -Value $vars['DomainName']
             }
 
             [string]$userdata = Load-UserData $CloudInit -repo $vars['Repo'] -volume $vars['VolumeName'] -branch $vars['Branch'] -domain $vars['DomainName'] -user $vars['UserName'] -email $vars['EmailAddress']
@@ -610,6 +616,8 @@ process {
 
             log "Access your Droplet with:"
             log "ssh $($vars['UserName'])@$($vars['FloatingIp'])"
+            log "View setup status with:"
+            log "tail -f /var/log/cloud-init-output.log"
 
             if (-not $Force) {
                 $proceed = confirm -Prompt 'Wait for HTTP access (~5 minutes)?' -EA 0
@@ -659,7 +667,7 @@ process {
                 }
             }
         }
-        elseif ($SSH) {
+        elseif ($Enter) {
             $vars = Prompt-IfNull $vars -keys 'UserName', 'FloatingIp'
 
             [object]$droplet = Get-Droplet $vars['DropletName'] -EA Stop
@@ -676,7 +684,7 @@ Supported actions:
 - Destroy (Remove)
 "@
         }
-        else { # elseif ($Info) {
+        else { # elseif ($Get) {
             $vars = Prompt-IfNull $vars -keys 'FloatingIp', 'VolumeName'
 
             [string]$status = $null
