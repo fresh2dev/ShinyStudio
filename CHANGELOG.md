@@ -1,22 +1,13 @@
 v0.5.0:
-  * https by default
-  * simplified management
-  * removed many preinstalled packages (thinner img)
-  * renamed 'start.sh' to 'entrypoint.sh'
-  * properly used COMMAND as arg to ENTRYPOINT.
+  * included cronicle task scheduler with sample jobs.
   * replaced standard python install w/ miniconda.
     * multiple environments
     * persistent apps
+  * removed many preinstalled packages (thinner img)
+  * renamed 'start.sh' to 'entrypoint.sh'
+  * properly used COMMAND as arg to ENTRYPOINT.
   * handled run-as-root scenarios.
-  * readers/admins/superadmins -> viewers/developers/administrators
-
-  * included cronicle
-  * added sample scripts
-    * backup content
-    * refresh report(s)
-    * http status check
-
-  Added Digital Ocean Droplet management script.
+  * default users/roles "readers/admin/superadmin" are now "viewers/developers/administrators"
 
 v0.4.0:
 * Redesigned for simpler setup and management.
