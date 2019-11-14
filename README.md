@@ -1,13 +1,11 @@
 # ShinyStudio
 
-## *A Docker orchestration of open-source solutions to facilitate secure, collaborative development.*
+## *A fully Dockerized, self-hosted development environment for teams. Develop where you serve.*
 
   - [Overview](#overview)
-      - [ShinyStudio Image](#shinystudio-image)
-      - [ShinyStudio Stack](#shinystudio-stack)
   - [Getting Started](#getting-started)
-      - [Image](#image)
-      - [Stack](#stack)
+      - [Minimal setup:](#minimal-setup)
+      - [Customized setup:](#customized-setup)
   - [Develop](#develop)
   - [Tools](#tools)
   - [References](#references)
@@ -23,164 +21,169 @@ solutions with the goal of providing:
     PowerShell, and more.
   - a secured, convenient way to share apps and documents written in
     Shiny, RMarkdown, plain Markdown, or HTML.
-  - easily reproducible, cross-platform setup leveraging Docker for all
-    components.
+  - easily reproducible, cross-platform setup leveraging Docker
+    containers.
 
-![](https://i.imgur.com/qc7bL1I.gif)
+The ShinyStudio ecosystem includes:
 
-![](https://i.imgur.com/PRDW25E.png)
-
-There are two distributions of ShinyStudio, the *image* and the *stack*,
-explained below.
-
-### ShinyStudio Image
-
-The ShinyStudio image, hosted on
-[DockerHub](https://hub.docker.com/r/dm3ll3n/shinystudio), builds upon
-the [Rocker project](https://www.rocker-project.org/) to include:
-
-  - [ShinyProxy](https://www.shinyproxy.io/)
-  - [RStudio Server](https://www.rstudio.com/)
-  - [VS Code](https://code.visualstudio.com/), modified by
-    [Coder.com](https://coder.com/)
-  - [Shiny Server](https://shiny.rstudio.com/)
-
-The image is great for a personal instance, a quick demo, or the
-building blocks for a very customized setup.
-
-[Get Started with the Image](#image)
-
-![ShinyStudio](https://i.imgur.com/FIzE0d7.png)
-
-### ShinyStudio Stack
-
-The ShinyStudio stack builds upon the image to incorporate:
-
-  - [NGINX](https://www.nginx.com/) with HTTPS enabled.
-  - [InfluxDB](https://www.influxdata.com/) for monitoring site usage.
+  - ShinyProxy (authentication and orchestration) \[
+    [Website](https://www.shinyproxy.io/configuration/) ;
+    [GitHub](https://github.com/openanalytics/shinyproxy) \]
+  - Shiny Server (web server) \[
+    [Website](https://rstudio.com/products/shiny/shiny-server/) ;
+    [GitHub](https://github.com/rstudio/shiny-server) \]
+  - RStudio Server (IDE) \[
+    [Website](https://rstudio.com/products/rstudio/) ;
+    [GitHub](https://github.com/rstudio/rstudio) \]
+      - Rocker (RStudio in Docker) \[
+        [Website](https://www.rocker-project.org/) ;
+        [GitHub](https://github.com/rocker-org/rocker-versioned) \]
+  - VS Code - code-server (IDE) \[
+    [Website](https://code.visualstudio.com/) ;
+    [GitHub](https://github.com/microsoft/vscode) \]
+      - code-server (VS Code in a browser) \[
+        [Website](https://coder.com/) ;
+        [GitHub](https://github.com/cdr/code-server) \]
+  - InfluxDB (DB for usage tracking) \[
+    [Website](https://www.influxdata.com/products/influxdb-overview/) ;
+    [GitHub](https://github.com/influxdata/influxdb) \]
+  - Cronicle (task scheduler) \[ [Website](http://cronicle.net/) ;
+    [GitHub](https://github.com/jhuckaby/Cronicle) \]
+  - NGINX (reverse proxy) \[ [Website](https://www.nginx.com/) ;
+    [GitHub](https://github.com/nginx/nginx) \]
+  - Certbot (LetsEncrypt daemon) \[
+    [Website](https://certbot.eff.org/about/) ;
+    [GitHub](https://github.com/certbot/certbot) \]
 
 Each component of the stack is run in a Docker container for
 reproducibility, scalability, and security. Only the NGINX port is
 exposed on the host system; all communication between ShinyProxy and
 other components happens inside an isolated Docker network.
 
-[Get Started with the Stack](#stack)
+![](https://i.imgur.com/PRDW25E.png)
 
-![](https://i.imgur.com/RsLeueG.png)
+The ShinyStudio “stack” includes the [ShinyStudio
+image](https://hub.docker.com/r/dm3ll3n/shinystudio), which builds upon
+the [rocker/verse image on
+DockerHub](https://hub.docker.com/r/rocker/verse).
 
-## Getting Started
+While this guide focuses on the stack, spin up the image in Bash or
+PowerShell with these commands:
 
-The setup has been verified to work on each of
-[Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) (for
-Linux) and [Docker
-Desktop](https://www.docker.com/products/docker-desktop) (for Mac and
-Windows).
+<details>
 
-> Note: when upgrading ShinyStudio, please setup from scratch and
-> migrate existing content/settings afterward.
-
-> Note: Setup must be run as a non-root user.
-
-### Image
-
-To download and run the ShinyStudio image from
-[DockerHub](https://hub.docker.com/r/dm3ll3n/shinystudio), first, create
-a docker network named `shinystudio-net`:
+<summary>Bash (Linux/Mac)</summary>
 
 ``` text
-docker network create shinystudio-net
-```
-
-Then, execute `docker run` in the terminal for your OS:
-
-  - Bash (Linux/Mac)
-
-<!-- end list -->
-
-``` text
+docker network create shinystudio-net && \
 docker run -d --restart always --name shinyproxy \
     --network shinystudio-net \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    -e USERID=$USERID \
+    -e USERID=$UID \
     -e USER=$USER \
     -e PASSWORD=password \
     -e CONTENT_PATH="${HOME}/ShinyStudio" \
     -e SITE_NAME=shinystudio \
-    -p 8080:8080 \
-    dm3ll3n/shinystudio
+    -e TAG=latest \
+    -p 80:8080 \
+    dm3ll3n/shinystudio:latest
 ```
 
-  - PowerShell (Windows)
+</details>
 
-<!-- end list -->
+<br/>
+
+<details>
+
+<summary>PowerShell</summary>
 
 ``` text
+docker network create shinystudio-net;
 docker run -d --restart always --name shinyproxy `
     --network shinystudio-net `
     -v /var/run/docker.sock:/var/run/docker.sock `
     -e USERID=1000 `
-    -e USER=$env:USERNAME `
+    -e USER=$([environment]::UserName) `
     -e PASSWORD=password `
-    -e CONTENT_PATH="/host_mnt/c/Users/$env:USERNAME/ShinyStudio" `
+    -e CONTENT_PATH="/host_mnt/c/Users/$([environment]::UserName)/ShinyStudio" `
     -e SITE_NAME=shinystudio `
-    -p 8080:8080 `
-    dm3ll3n/shinystudio
+    -e TAG=latest `
+    -p 80:8080 `
+    dm3ll3n/shinystudio:latest
 ```
 
-> Notice the unique form of the path for the `CONTENT_PATH` variable in
-> the Windows setup.
+> Notice the unique form of the path for the `CONTENT_PATH` variable
+> required when in a Windows environment.
 
-Once complete, open a web browser and navigate to
-`http://<hostname>:8080`. Log in with your username and the password
-`password`.
+</details>
 
-### Stack
+<br/>
 
-The *stack* distribution of ShinyStudio is delivered through the [GitHub
-repo](https://github.com/dm3ll3n/ShinyStudio) and introduces two
-additional requirements:
+![](https://i.imgur.com/qc7bL1I.gif)
 
-  - [docker-compose](https://docs.docker.com/compose/install/) (ships
-    with Docker Desktop)
+## Getting Started
+
+PreReqs:
+
+  - Docker on Linux, Mac, or Windows
+  - [docker-compose](https://docs.docker.com/compose/install/)
   - [Git](https://git-scm.com/downloads)
-
-HTTPS is configured by default, so SSL/TLS certs are required in order
-for the stack to operate. Use the provided script `certify.sh`
-(`certify.ps1` for Windows) to create a self-signed certificate, or to
-request one from LetsEncrypt (more on that).
 
 #### Minimal setup:
 
 ``` text
-# copy the setup files.
-git clone https://github.com/dm3ll3n/ShinyStudio
+# copy the setup files from version branch 0.5.0
+git clone -b 0.5.0 https://github.com/dm3ll3n/ShinyStudio
 
 # enter the directory.
 cd ShinyStudio
 
 # run certify to generate self-signed cert.
-./certify.[sh/ps1]
+## Bash users run:
+./certify.sh
+
+## Powershell users run:
+./certify.ps1
 ```
+
+> Important\! As a crucial first step, log in to the job scheduler at
+> `https://<hostname>:8443` using the username `admin` and password
+> `administrator`. Once in, go into settings and set a unique password.
 
 Now, browse to `http://<hostname>` (e.g., `http://localhost`) to access
 ShinyStudio. On first launch, you will need to accept the warning about
 an untrusted certificate. See the customized setup to see how to request
 a trusted cert from LetsEncrypt.
 
-The default logins are below. See the customized setup to see how to
-add/remove accounts.
+The default logins are below.
 
-| **username** | **password** |
-| :----------: | :----------: |
-|     user     |     user     |
-|    admin     |    admin     |
-|  superadmin  |  superadmin  |
+| **username** | **password**  |
+| :----------: | :-----------: |
+|     user     |     user      |
+|     dev      |   developer   |
+|    admin     | administrator |
 
 #### Customized setup:
 
-There are three files essential to a customized configuration:
+Customized setup checklist:
 
-1.  `.env`
+  - [ ] Clone a version branch.
+      - [ ] Optionally, push to your own private repo.
+  - [ ] set users/passwords in `application.yml`
+  - [ ] set CONTENT\_PATH in `.env`
+  - [ ] set domain name in `nginx.conf`
+  - [ ] certify and start.
+  - [ ] login to cronicle, change password.
+      - [ ] optionally, schedule jobs.
+  - [ ] login to shinystudio.
+  - [ ] set your own user-specific preferences.
+
+The files essential to a customized configuration are described more
+in-depth below:
+
+<details>
+
+<summary>.env</summary>
 
 > The docker-compose environment file. The project name, content path,
 > and HTTP ports can be changed here.
@@ -189,7 +192,13 @@ Note that Docker volume names are renamed along with the project name,
 so be prepared to migrate or recreate data stored in Docker volumes when
 changing the project name.
 
-2.  `application.yml`
+</details>
+
+<br/>
+
+<details>
+
+<summary>application.yml</summary>
 
 > The ShinyProxy config file. Users can be added/removed here. Other
 > configurations are available too, such as the site title and the
@@ -209,7 +218,13 @@ Review the [ShinyProxy configuration
 documentation](https://www.shinyproxy.io/configuration/) for all
 options.
 
-3.  `nginx.conf`
+</details>
+
+<br/>
+
+<details>
+
+<summary>nginx.conf</summary>
 
 > The NGINX config file. Defines the accepted site name and what ports
 > to listen on.
@@ -218,7 +233,13 @@ If you change the ports here, you must also change the ports defined in
 the `.env` file. Also, if you change the domain name, you must
 provide/generate a new certificate for it.
 
-4.  `certify.[sh/ps1]`
+</details>
+
+<br>
+
+<details>
+
+<summary>certify.\[sh/ps1\]</summary>
 
 > The script used to generate a self-signed cert, or to request a
 > trusted cert from LetsEncrypt.
@@ -253,6 +274,10 @@ commands, e.g.:
     # start all services.
     docker-compose up -d
 
+</details>
+
+<br/>
+
 ## Develop
 
 Open either RStudio or VS Code and notice two important directories:
@@ -276,7 +301,7 @@ the appropriate directory.
 The ShinyStudio image comes with…
 
   - R
-  - Python 3
+  - Python 3 (via miniconda)
   - PowerShell
 
 …and ODBC drivers for:
@@ -287,23 +312,22 @@ The ShinyStudio image comes with…
 
 These are persistent because they are built into the image.
 
-|                               | Persistent |
-| ----------------------------: | :--------: |
-| \_\_ShinyStudio\_\_ directory |    Yes     |
-|    \_\_Personal\_\_ directory |    Yes     |
-|             Other directories |   **No**   |
-|                   R Libraries |    Yes     |
-|               Python Packages |    Yes     |
-|            PowerShell Modules |    Yes     |
-|         RStudio User Settings |    Yes     |
-|         VS Code User Settings |    Yes     |
-|                Installed Apps |   **No**   |
-|             Installed Drivers |   **No**   |
+|                               |              Persistent               |
+| ----------------------------: | :-----------------------------------: |
+| \_\_ShinyStudio\_\_ directory |                  Yes                  |
+|    \_\_Personal\_\_ directory |                  Yes                  |
+|             Other directories |                **No**                 |
+|    Python (conda) Enviroments |                  Yes                  |
+|               Python Packages |                  Yes                  |
+|                   R Libraries |                  Yes                  |
+|            PowerShell Modules |                  Yes                  |
+|         RStudio User Settings |                  Yes                  |
+|         VS Code User Settings |                  Yes                  |
+|                Installed Apps | **No**, unless installed with `conda` |
+|             Installed Drivers |                **No**                 |
 
 ## References
 
-  - <https://www.shinyproxy.io/>
-  - <https://www.rocker-project.org/>
   - <https://telethonkids.wordpress.com/2019/02/08/deploying-an-r-shiny-app-with-docker/>
   - <https://appsilon.com/alternatives-to-scaling-shiny>
   - <https://github.com/wmnnd/nginx-certbot>
