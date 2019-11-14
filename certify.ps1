@@ -45,9 +45,6 @@ if ($Email) {
         $staging_arg = '--staging'
     }
 
-    # give nginx plenty of time to start
-    Start-Sleep -Seconds 20
-
     certbot_run "\
     certbot certonly --webroot -w /var/www/certbot \
         $staging_arg \
