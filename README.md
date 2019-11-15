@@ -4,8 +4,6 @@
 
   - [Overview](#overview)
   - [Getting Started](#getting-started)
-      - [Minimal setup:](#minimal-setup)
-      - [Customized setup:](#customized-setup)
   - [Develop](#develop)
   - [Tools](#tools)
   - [References](#references)
@@ -26,32 +24,31 @@ solutions with the goal of providing:
 
 The ShinyStudio ecosystem includes:
 
-  - ShinyProxy (authentication and orchestration) \[
+  - **ShinyProxy** (authentication and orchestration) \[
     [Website](https://www.shinyproxy.io/configuration/) ;
     [GitHub](https://github.com/openanalytics/shinyproxy) \]
-  - Shiny Server (web server) \[
+  - **Shiny Server** (web server) \[
     [Website](https://rstudio.com/products/shiny/shiny-server/) ;
     [GitHub](https://github.com/rstudio/shiny-server) \]
-  - RStudio Server (IDE) \[
+  - **RStudio Server** (IDE) \[
     [Website](https://rstudio.com/products/rstudio/) ;
     [GitHub](https://github.com/rstudio/rstudio) \]
-      - Rocker (RStudio in Docker) \[
+      - **Rocker** (RStudio in Docker) \[
         [Website](https://www.rocker-project.org/) ;
         [GitHub](https://github.com/rocker-org/rocker-versioned) \]
-  - VS Code - code-server (IDE) \[
-    [Website](https://code.visualstudio.com/) ;
+  - **VS Code** (IDE) \[ [Website](https://code.visualstudio.com/) ;
     [GitHub](https://github.com/microsoft/vscode) \]
-      - code-server (VS Code in a browser) \[
+      - **code-server** (VS Code in a browser) \[
         [Website](https://coder.com/) ;
         [GitHub](https://github.com/cdr/code-server) \]
-  - InfluxDB (DB for usage tracking) \[
+  - **InfluxDB** (DB for usage tracking) \[
     [Website](https://www.influxdata.com/products/influxdb-overview/) ;
     [GitHub](https://github.com/influxdata/influxdb) \]
-  - Cronicle (task scheduler) \[ [Website](http://cronicle.net/) ;
+  - **Cronicle** (task scheduler) \[ [Website](http://cronicle.net/) ;
     [GitHub](https://github.com/jhuckaby/Cronicle) \]
-  - NGINX (reverse proxy) \[ [Website](https://www.nginx.com/) ;
+  - **NGINX** (reverse proxy) \[ [Website](https://www.nginx.com/) ;
     [GitHub](https://github.com/nginx/nginx) \]
-  - Certbot (LetsEncrypt daemon) \[
+  - **Certbot** (LetsEncrypt daemon) \[
     [Website](https://certbot.eff.org/about/) ;
     [GitHub](https://github.com/certbot/certbot) \]
 
