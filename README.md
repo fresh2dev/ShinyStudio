@@ -2,11 +2,11 @@
 
 ## *A fully Dockerized, self-hosted development environment for teams. Develop where you serve.*
 
-  - [Overview](#overview)
-  - [Getting Started](#getting-started)
-  - [Develop](#develop)
-  - [Tools](#tools)
-  - [References](#references)
+- [Overview](#overview)
+- [Getting Started](#getting-started)
+- [Develop](#develop)
+- [Tools](#tools)
+- [References](#references)
 
 ## Overview
 
@@ -73,16 +73,16 @@ PowerShell with these commands:
 
 ``` text
 docker network create shinystudio-net && \
-docker run -d --restart always --name shinyproxy \
+docker run --rm -it \
     --network shinystudio-net \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -e USERID=$UID \
     -e USER=$USER \
     -e PASSWORD=password \
-    -e CONTENT_PATH="${HOME}/ShinyStudio" \
+    -e CONTENT_PATH="${HOME}/ShinyStudio/content" \
     -e SITE_NAME=shinystudio \
-    -e TAG=latest \
     -p 80:8080 \
+    -e TAG=latest \
     dm3ll3n/shinystudio:latest
 ```
 
@@ -96,16 +96,16 @@ docker run -d --restart always --name shinyproxy \
 
 ``` text
 docker network create shinystudio-net;
-docker run -d --restart always --name shinyproxy `
+docker run -d --rm -it `
     --network shinystudio-net `
     -v /var/run/docker.sock:/var/run/docker.sock `
     -e USERID=1000 `
     -e USER=$([environment]::UserName) `
     -e PASSWORD=password `
-    -e CONTENT_PATH="/host_mnt/c/Users/$([environment]::UserName)/ShinyStudio" `
+    -e CONTENT_PATH="/host_mnt/c/Users/$([environment]::UserName)/ShinyStudio/content" `
     -e SITE_NAME=shinystudio `
-    -e TAG=latest `
     -p 80:8080 `
+    -e TAG=latest `
     dm3ll3n/shinystudio:latest
 ```
 
@@ -137,10 +137,10 @@ cd ShinyStudio
 
 # run certify to generate self-signed cert.
 ## Bash users run:
-./certify.sh
+bash ./certify.sh
 
 ## Powershell users run:
-./certify.ps1
+pwsh ./certify.ps1
 ```
 
 > Important\! As a crucial first step, log in to the job scheduler at
@@ -164,19 +164,32 @@ The default logins are below.
 
 Customized setup checklist:
 
-  - [ ] Clone a version branch.
-      - [ ] Optionally, push to your own private repo.
-  - [ ] set users/passwords in `application.yml`
-  - [ ] set CONTENT\_PATH in `.env`
-  - [ ] set domain name in `nginx.conf`
-  - [ ] certify and start.
-  - [ ] login to cronicle, change password.
-      - [ ] optionally, schedule jobs.
-  - [ ] login to shinystudio.
-  - [ ] set your own user-specific preferences.
+> Pre-Setup
 
-The files essential to a customized configuration are described more
-in-depth below:
+  - [ ] Clone a version branch.
+      - `git clone -b 0.5.0 https://github.com/dm3ll3n/ShinyStudio.git
+        myShinyStudio`
+      - [ ] Optionally, push to your own private repo.
+          - `git checkout -b master`
+          - `git remote set-url origin
+            https://github.com/<username>/myShinyStudio.git`
+          - `git push`
+  - [ ] Set users/passwords in `application.yml`
+  - [ ] Set CONTENT\_PATH in `.env`
+  - [ ] Set domain name in `nginx.conf`
+  - [ ] Certify and launch.
+      - `bash certify.sh *or* pwsh certify.ps1`
+
+> Post-Setup
+
+  - [ ] Log in to cronicle at `https://<hostname>:8443`, change
+    password.
+      - [ ] Optionally, schedule jobs.
+  - [ ] Login to shinystudio.
+  - [ ] Set your own user-specific preferences in RStudio and VS Code.
+
+The files essential to a customized configuration are described in more
+detail below:
 
 <details>
 
@@ -204,12 +217,12 @@ changing the project name.
 Using the provided template, you can assign users to the following
 groups with tiered access:
 
-  - **readers**: can only view content from “Apps & Reports”,
+  - **viewers**: can only view content from “Apps & Reports”,
     “Documents”, and “Personal”.
-  - **admins**: can view all site content and develop content with
+  - **developers**: can view all site content and develop content with
     RStudio and VS Code.
-  - **superadmins**: can view and develop site content across multiple
-    instances of ShinyStudio. Can also manage *all* user files.
+  - **administrators**: can view and develop site content across
+    multiple instances of ShinyStudio. Can also manage *all* user files.
 
 Review the [ShinyProxy configuration
 documentation](https://www.shinyproxy.io/configuration/) for all
@@ -236,7 +249,7 @@ provide/generate a new certificate for it.
 
 <details>
 
-<summary>certify.\[sh/ps1\]</summary>
+<summary>certify.sh</summary>
 
 > The script used to generate a self-signed cert, or to request a
 > trusted cert from LetsEncrypt.
@@ -247,20 +260,19 @@ With no parameters, `certify` generates a self-signed cert for
 To generate a self-signed cert with another domain name, first edit the
 domain name in `nginx.conf`. Afterward, generate a new cert with:
 
-    ./certify.sh <domain name>
+    bash ./certify.sh <domain>
     
-    # e.g., ./certify.sh www.shinystudio.com
+    # e.g., bash ./certify.sh www.shinystudio.com
 
 If your server is accessible from the web, you can request a trusted
 certificate from LetsEncrypt. First, edit `nginx.conf` with your domain
 name, then request a new cert from LetsEncrypt like so:
 
-    ./certify.sh <domain name> <email>
+    bash ./certify.sh <domain> <email>
     
-    # e.g., ./certify.sh www.shinystudio.com donald@email.com
+    # e.g., bash ./certify.sh www.shinystudio.com you@email.com
 
-CertBot, included in the stack, will automatically renew your
-LetsEncrypt certificate.
+CertBot will automatically renew your LetsEncrypt certificate.
 
 To manage the services in the stack, use the native docker-compose
 commands, e.g.:
