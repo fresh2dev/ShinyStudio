@@ -2,11 +2,13 @@
 
 ## *A fully Dockerized, self-hosted development environment for teams. Develop where you serve.*
 
-- [Overview](#overview)
-- [Getting Started](#getting-started)
-- [Develop](#develop)
-- [Tools](#tools)
-- [References](#references)
+  - [Overview](#overview)
+  - [Getting Started](#getting-started)
+      - [Minimal setup:](#minimal-setup)
+      - [Customized setup:](#customized-setup)
+  - [Develop](#develop)
+  - [Tools](#tools)
+  - [References](#references)
 
 ## Overview
 
@@ -96,7 +98,7 @@ docker run --rm -it \
 
 ``` text
 docker network create shinystudio-net;
-docker run -d --rm -it `
+docker run --rm -it `
     --network shinystudio-net `
     -v /var/run/docker.sock:/var/run/docker.sock `
     -e USERID=1000 `
