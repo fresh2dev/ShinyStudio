@@ -7,7 +7,7 @@ services:
     restart: always
     volumes:
       - './nginx.conf:/etc/nginx/nginx.conf:z'
-      - './config/container/letsencrypt:/etc/letsencrypt:z'
+      - 'letsencrypt_data:/etc/letsencrypt'
       - 'certbot_data:/var/www/certbot'
     ports:
       - 80:80
@@ -20,7 +20,7 @@ services:
     image: certbot/certbot
     restart: unless-stopped
     volumes:
-      - './config/container/letsencrypt:/etc/letsencrypt:z'
+      - 'letsencrypt_data:/etc/letsencrypt'
       - 'certbot_data:/var/www/certbot'
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
@@ -39,12 +39,14 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - './config/container/img:/opt/shinyproxy/templates/grid-layout/assets/img:z'
       - "./application.yml:/opt/shinyproxy/application.yml:z"
+      - 'letsencrypt_data:/etc/letsencrypt'
     environment:
       - TAG=${TAG}
       - APPLICATION_LOGS_TO_STDOUT=false
       - SITE_NAME=${COMPOSE_PROJECT_NAME}
       - CONTENT_PATH=${CONTENT_PATH}
       - USERID=${USERID}
+      - DOMAIN_NAME=${DOMAIN_NAME}
 
   cronicle:
     build:
@@ -80,6 +82,7 @@ volumes:
   influxdb_data:
   cronicle_data:
   certbot_data:
+  letsencrypt_data:
   r_libraries:
   py_environment:
   pwsh_modules:
