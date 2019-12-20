@@ -57,7 +57,7 @@ services:
     volumes:
       - "${CONTENT_PATH}:/home/shinystudio/__ShinyStudio__:z"
       - "r_libraries:/r-libs"
-      - "py_environment:/conda3"
+      - "py_environment:/conda"
       - "cronicle_data:/opt/cronicle"
       - "pwsh_modules:/home/shinystudio/.local/share/powershell/Modules"
     environment:
