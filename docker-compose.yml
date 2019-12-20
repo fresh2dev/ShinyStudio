@@ -5,14 +5,15 @@ services:
   nginx:
     image: nginx
     restart: always
+    networks:
+      - frontend
     volumes:
-      - './nginx.conf:/etc/nginx/nginx.conf:z'
+      - './config/nginx.conf:/etc/nginx/nginx.conf:z'
       - 'letsencrypt_data:/etc/letsencrypt'
       - 'certbot_data:/var/www/certbot'
     ports:
       - 80:80
       - 443:443
-      # - 8080:8080
       - 8443:8443
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
 
@@ -25,20 +26,18 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   shinystudio:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        TAG: ${TAG}
-    image: ${COMPOSE_PROJECT_NAME}_shinystudio:${TAG}
+    image: dm3ll3n/shinystudio:${TAG}
     command: [ "shinyproxy" ]
     restart: always
+    networks:
+      - frontend
+      - backend
     depends_on:
       - influxdb
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
-      - './config/container/img:/opt/shinyproxy/templates/grid-layout/assets/img:z'
-      - "./application.yml:/opt/shinyproxy/application.yml:z"
+      - './config/imgs:/opt/shinyproxy/templates/grid-layout/assets/img:z'
+      - "./config/application.yml:/opt/shinyproxy/application.yml:z"
       - 'letsencrypt_data:/etc/letsencrypt'
     environment:
       - TAG=${TAG}
@@ -49,15 +48,12 @@ services:
       - DOMAIN_NAME=${DOMAIN_NAME}
 
   cronicle:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        TAG: ${TAG}
-    image: ${COMPOSE_PROJECT_NAME}_cronicle:${TAG}
+    image: dm3ll3n/shinystudio:${TAG}
     command: [ "cronicle" ]
     hostname: cronicle
     restart: always
+    networks:
+      - backend
     volumes:
       - "${CONTENT_PATH}:/home/shinystudio/__ShinyStudio__:z"
       - "r_libraries:/r-libs"
@@ -72,6 +68,8 @@ services:
   influxdb:
     image: influxdb
     restart: always
+    networks:
+      - backend
     volumes:
       - 'influxdb_data:/var/lib/influxdb'
     environment:
@@ -86,3 +84,7 @@ volumes:
   r_libraries:
   py_environment:
   pwsh_modules:
+
+networks:
+  frontend:
+  backend:

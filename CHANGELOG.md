@@ -8,6 +8,7 @@ v0.5.0:
   * properly used COMMAND as arg to ENTRYPOINT.
   * handled run-as-root scenarios.
   * default users/roles "readers/admin/superadmin" are now "viewers/developers/administrators"
+  * generate self-signed cert if non exists.
 
 v0.4.0:
 * Redesigned for simpler setup and management.
