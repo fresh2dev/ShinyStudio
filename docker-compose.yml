@@ -53,7 +53,7 @@ services:
     hostname: cronicle
     restart: always
     networks:
-      - backend
+      - frontend
     volumes:
       - "${CONTENT_PATH}:/home/shinystudio/__ShinyStudio__:z"
       - "r_libraries:/r-libs"
